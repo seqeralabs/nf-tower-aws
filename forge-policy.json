@@ -1,0 +1,46 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Sid": "VisualEditor0",
+        "Effect": "Allow",
+        "Action": [
+          "ssm:GetParameters",
+          "iam:CreateInstanceProfile",
+          "iam:DeleteInstanceProfile",
+          "iam:GetRole",
+          "iam:RemoveRoleFromInstanceProfile",
+          "iam:CreateRole",
+          "iam:DeleteRole",
+          "iam:AttachRolePolicy",
+          "iam:PutRolePolicy",
+          "iam:AddRoleToInstanceProfile",
+          "iam:PassRole",
+          "iam:DetachRolePolicy",
+          "iam:ListAttachedRolePolicies",
+          "iam:DeleteRolePolicy",
+          "iam:ListRolePolicies",
+          "batch:CreateComputeEnvironment",
+          "batch:DescribeComputeEnvironments",
+          "batch:CreateJobQueue",
+          "batch:DescribeJobQueues",
+          "batch:UpdateComputeEnvironment",
+          "batch:DeleteComputeEnvironment",
+          "batch:UpdateJobQueue",
+          "batch:DeleteJobQueue",
+          "fsx:DeleteFileSystem",
+          "fsx:DescribeFileSystems",
+          "fsx:CreateFileSystem",
+          "ec2:DescribeSecurityGroups",
+          "ec2:DescribeAccountAttributes",
+          "ec2:DescribeSubnets",
+          "ec2:DescribeLaunchTemplates",
+          "ec2:CreateLaunchTemplate",
+          "ec2:DeleteLaunchTemplate",
+          "ec2:DescribeInstanceTypeOfferings"
+        ],
+        "Resource": "*"
+      }
+    ]
+  }
+  
