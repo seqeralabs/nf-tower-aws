@@ -5,6 +5,8 @@
         "Sid": "VisualEditor0",
         "Effect": "Allow",
         "Action": [
+          "s3:Get*",
+          "s3:List*",
           "ssm:GetParameters",
           "iam:CreateInstanceProfile",
           "iam:DeleteInstanceProfile",
