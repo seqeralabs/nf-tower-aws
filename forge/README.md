@@ -3,9 +3,9 @@
 Tower Forge automates the configuration of [AWS Batch](https://aws.amazon.com/batch/) compute environments and queues
 required for the deployment of Nextflow pipelines. 
 
-To enable this feature Tower require the permissions listed in [this policy](forge-policy.json) file. 
+To enable this feature Tower requires the permissions listed in [this policy](forge-policy.json) file. 
 
-Attach the policy to the AWS user account associatedto your Tower configuration, as described below: 
+Attach the policy to the AWS user account associated to your Tower configuration as described below: 
 
 1) Open the AWS [IAM console](https://console.aws.amazon.com/iam/home)
 2) Select *Users* on the left menu 
@@ -14,3 +14,11 @@ Attach the policy to the AWS user account associatedto your Tower configuration,
 5) Choose *JSON* and copy the content of the policy linked above. 
 6) Click on the button *Review policy* and confirm the operation clicking *Create policy* 
 
+Note: This policy also includes the mininal permissions required to allow the user to submit
+Batch jobs, gather containers execution metadata, read CloudWatch logs and access the S3 bucket in your AWS 
+account in read-only mode. 
+
+You may need to further customised the IAM permissions to access private ECR registries, 
+write to S3 buckets or access other AWS resources. 
+
+See [Tower Launch](../launch/README.md) for more details.
