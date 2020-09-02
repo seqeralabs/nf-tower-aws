@@ -19,7 +19,14 @@
                 "ec2:DescribeInstanceTypes",
                 "ec2:DescribeInstanceAttribute",
                 "ecs:DescribeContainerInstances",
-                "ec2:DescribeInstanceStatus"
+                "ec2:DescribeInstanceStatus",
+                "logs:Describe*",
+                "logs:Get*",
+                "logs:List*",
+                "logs:StartQuery",
+                "logs:StopQuery",
+                "logs:TestMetricFilter",
+                "logs:FilterLogEvents"                
             ],
             "Resource": "*"
         }
