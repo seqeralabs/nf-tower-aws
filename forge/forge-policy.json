@@ -64,6 +64,7 @@
               "ec2:DescribeInstanceAttribute",
               "ecs:DescribeContainerInstances",
               "ec2:DescribeInstanceStatus",
+              "ec2:DescribeImages",
               "logs:Describe*",
               "logs:Get*",
               "logs:List*",
