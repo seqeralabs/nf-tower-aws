@@ -40,7 +40,15 @@
               "ec2:DeleteLaunchTemplate",
               "ec2:DescribeKeyPairs",
               "ec2:DescribeVpcs",
-              "ec2:DescribeInstanceTypeOfferings"
+              "ec2:DescribeInstanceTypeOfferings",
+              "elasticfilesystem:DescribeMountTargets",
+              "elasticfilesystem:CreateMountTarget",
+              "elasticfilesystem:CreateFileSystem",
+              "elasticfilesystem:DescribeFileSystems",
+              "elasticfilesystem:DeleteMountTarget",
+              "elasticfilesystem:DeleteFileSystem",
+              "elasticfilesystem:UpdateFileSystem",
+              "elasticfilesystem:PutLifecycleConfiguration"
           ],
           "Resource": "*"
       },
