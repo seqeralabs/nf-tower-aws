@@ -21,4 +21,12 @@ account in read-only mode.
 You may need to further customised the IAM permissions to access private ECR registries, 
 write to S3 buckets or access other AWS resources. 
 
+### Pipeline Secrets
+
+If you are planning to use the Pipeline Secrets feature provided by Tower, the following
+IAM permissions should be provided:
+
+Add the custom policy at [this link](../launch/secrets-policy-account.json) to the IAM user or role granting
+   access to your AWS account to Tower (the one specified in the Tower credentials).
+
 See [Tower Launch](../launch/README.md) for more details.
