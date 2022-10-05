@@ -9,6 +9,7 @@
                 "batch:CancelJob",
                 "batch:SubmitJob",
                 "batch:ListJobs",
+                "batch:TagResource",
                 "batch:DescribeComputeEnvironments",
                 "batch:TerminateJob",
                 "batch:DescribeJobs",
@@ -26,7 +27,8 @@
                 "logs:StartQuery",
                 "logs:StopQuery",
                 "logs:TestMetricFilter",
-                "logs:FilterLogEvents"                
+                "logs:FilterLogEvents",
+                "secretsmanager:ListSecrets"
             ],
             "Resource": "*"
         }
