@@ -28,6 +28,7 @@
                 "logs:StopQuery",
                 "logs:TestMetricFilter",
                 "logs:FilterLogEvents",
+                "ses:SendRawEmail",
                 "secretsmanager:ListSecrets"
             ],
             "Resource": "*"

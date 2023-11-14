@@ -86,7 +86,8 @@
               "logs:StartQuery",
               "logs:StopQuery",
               "logs:TestMetricFilter",
-              "logs:FilterLogEvents"
+              "logs:FilterLogEvents",
+              "ses:SendRawEmail"
           ],
           "Resource": "*"
       }
