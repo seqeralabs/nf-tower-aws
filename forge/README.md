@@ -19,8 +19,9 @@ Attach the policy to the AWS user account associated to your Tower configuration
 > Batch jobs, gather containers execution metadata, read CloudWatch logs and access the S3 bucket in your AWS 
 > account in read-only mode. 
 
-You may need to further customised the IAM permissions to access private ECR registries, 
-write to S3 buckets or access other AWS resources. 
+> **Important
+> You may need to further customised the IAM permissions to access private ECR registries, 
+> write to S3 buckets or access other AWS resources. 
 
 ### Pipeline Secrets
 
