@@ -2,7 +2,7 @@
     "Version": "2012-10-17",
     "Statement": [
         {
-            "Sid": "VisualEditor0",
+            "Sid": "TowerLaunch0",
             "Effect": "Allow",
             "Action": [
                 "batch:DescribeJobQueues",
@@ -21,6 +21,7 @@
                 "ec2:DescribeInstanceAttribute",
                 "ecs:DescribeContainerInstances",
                 "ec2:DescribeInstanceStatus",
+                "ec2:DescribeImages",
                 "logs:Describe*",
                 "logs:Get*",
                 "logs:List*",
