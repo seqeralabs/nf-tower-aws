@@ -1,34 +1,33 @@
-# Tower Forge for AWS Batch
+# Batch Forge for AWS Batch
 
-Tower Forge automates the configuration of [AWS Batch](https://aws.amazon.com/batch/) compute environments and queues
+Batch Forge automates the configuration of [AWS Batch](https://aws.amazon.com/batch/) compute environments and queues
 required for the deployment of Nextflow pipelines. 
 
-To enable this feature Tower requires the permissions listed in [this policy](forge-policy.json) file. 
+To enable this feature, Seqera Platform requires the permissions listed in [this policy](forge-policy.json) file. 
 
-Attach the policy to the AWS user account associated to your Tower configuration as described below: 
+Attach the policy to the AWS user account associated to your Seqera configuration as described below: 
 
-1) Open the AWS [IAM console](https://console.aws.amazon.com/iam/home)
-2) Select *Users* on the left menu 
-3) Choose (or create) the user associated in your Tower configuration 
-4) Click on *Add inline policy*
-5) Choose *JSON* and copy the content of the policy linked above. 
-6) Click on the button *Review policy* and confirm the operation clicking *Create policy* 
+1) Open the AWS [IAM console](https://console.aws.amazon.com/iam/home) and select **Users**.
+2) Select or create the user associated with your Seqera configuration.
+3) Select **Add inline policy**.
+4) Select **JSON** and copy the content of the policy linked above. 
+6) Select **Review policy** and then **Create policy**.
 
 > **Note** 
 > This policy also includes the mininal permissions required to allow the user to submit
-> Batch jobs, gather containers execution metadata, read CloudWatch logs and access the S3 bucket in your AWS 
+> Batch jobs, gather container execution metadata, read CloudWatch logs, and access the S3 bucket in your AWS 
 > account in read-only mode. 
 
 > **Important**
-> You may need to further customised the IAM permissions to access private ECR registries, 
-> write to S3 buckets or access other AWS resources. 
+> You may need to customize the IAM permissions to access private ECR registries, 
+> write to S3 buckets, or access other AWS resources. 
 
-### Pipeline Secrets
+### Pipeline secrets
 
-If you are planning to use the Pipeline Secrets feature provided by Tower, the following
-IAM permissions should be provided:
+To use pipeline secrets in Seqera Platform, the following
+IAM permissions must be provided:
 
-Add the custom policy at [this link](../launch/secrets-policy-account.json) to the IAM user or role granting
-   access to your AWS account to Tower (the one specified in the Tower credentials).
+Add [this custom policy](../launch/secrets-policy-account.json) to the IAM user or role used by Seqera
+   to access your AWS account (specified in the Seqera credentials).
 
-See [Tower Launch](../launch/README.md) for more details.
+See [Seqera Launch](../launch/README.md) for more details.
