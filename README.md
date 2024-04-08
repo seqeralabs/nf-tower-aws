@@ -1,4 +1,4 @@
-# AWS IAM policies for Nextflow Tower  
+# AWS IAM policies for Seqera Platform 
  
-This repo contains the policies required by AWS to allow Nextflow Tower
+This repo contains the policies required by AWS to allow Seqera Platform
 to operate properly.
