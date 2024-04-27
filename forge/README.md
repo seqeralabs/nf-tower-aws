@@ -13,12 +13,12 @@ Attach the policy to the AWS user account associated to your Seqera configuratio
 4) Select **JSON** and copy the content of the policy linked above. 
 6) Select **Review policy** and then **Create policy**.
 
-> **Note** 
+> [!Note] 
 > This policy also includes the mininal permissions required to allow the user to submit
 > Batch jobs, gather container execution metadata, read CloudWatch logs, and access the S3 bucket in your AWS 
 > account in read-only mode. 
 
-> **Important**
+> [!Important]
 > You may need to customize the IAM permissions to access private ECR registries, 
 > write to S3 buckets, or access other AWS resources. 
 
