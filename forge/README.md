@@ -24,10 +24,8 @@ Attach the policy to the AWS user account associated to your Seqera configuratio
 
 ### Pipeline secrets
 
-To use pipeline secrets in Seqera Platform, the following
-IAM permissions must be provided:
+To use pipeline secrets in Seqera Platform, the following IAM permissions must be provided:
 
-Add [this custom policy](../launch/secrets-policy-account.json) to the IAM user or role used by Seqera
-   to access your AWS account (specified in the Seqera credentials).
+Add [this custom policy](../launch/secrets-policy-account.json) to the IAM user or role used by Seqera to access your AWS account (specified in the Seqera credentials).
 
 See [Seqera Launch](../launch/README.md) for more details.

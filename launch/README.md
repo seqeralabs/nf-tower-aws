@@ -1,40 +1,38 @@
-# Tower Launch for AWS Batch
+# Launch for AWS Batch
 
-Nextflow Tower allows the seamless deployment of Nextflow data pipelines 
-using [AWS Batch](https://aws.amazon.com/batch/) computing service. 
+Seqera Platform enables the seamless deployment of Nextflow data pipelines with the [AWS Batch](https://aws.amazon.com/batch/) computing service. 
 
-To enable such deployment create a AWS user account (or use an existing one)
-granting at least the following IAM permission: 
+1. Create a AWS user account (or use an existing one) granting at least the following IAM permission: 
 
-- `AmazonS3ReadOnlyAccess` 
-- `AmazonEC2ContainerRegistryReadOnly`
-- `CloudWatchLogsReadOnlyAccess` 
-- The following [custom policy](launch-policy.json) to grant the ability to submit and control Batch jobs.
-- Grant write access to any S3 bucket used a pipeline work directory using the following [policy template](s3-bucket-write.json). 
+  - `AmazonS3ReadOnlyAccess` 
+  - `AmazonEC2ContainerRegistryReadOnly`
+  - `CloudWatchLogsReadOnlyAccess` 
+  - The following [custom policy](launch-policy.json) to grant the ability to submit and control Batch jobs.
+  - Grant write access to any S3 bucket used as a pipeline work directory with the following [policy template](s3-bucket-write.json). 
 
-You will also need to create the AWS Batch queue(s) required to deploy the Nextflow execution. 
+1. Create the AWS Batch queue(s) required to deploy the Nextflow execution. 
 
-Tower can automate this configuration step, granting the required permissions to it as described 
-at [this link](../forge/README.md).
+Seqera can automate this configuration step and grant the required permissions with [Batch Forge](../forge/README.md).
 
+### Seqera role trust policy (optional)
 
-### Pipeline Secrets
+You can optionally create a Seqera role trust policy to allow EC2 instances or EKS clusters (depending on your Seqera deployment) to assume the Seqera IAM role.
 
-If you are planning to use the Pipeline Secrets feature provided by Tower, the following
-extra IAM permissions should be provided: 
+1. Download the [Seqera role trust policy](../launch/seqera-role-trust-policy.json).
+1. Replace `YOUR-AWS-ACCOUNT` with your AWS account ID. 
+1. Replace `USER-OR-ROLE/USER-OR-ROLE-ID` with the users and or roles that must be able to assume the Seqera IAM role. 
+
+### Pipeline secrets
+
+To use pipeline secrets in Seqera Platform, the following extra IAM permissions must be provided: 
  
-1. Create the AWS Batch [IAM Execution role](https://docs.aws.amazon.com/batch/latest/userguide/execution-IAM-role.html#create-execution-role) as specified in the AWS documentation.
+1. Create the AWS Batch [execution IAM role](https://docs.aws.amazon.com/batch/latest/userguide/execution-IAM-role.html#create-execution-role).
 
-2. Make sure to add the *Execution role* created above the `AmazonECSTaskExecutionRolePolicy` policy
-  and the custom policy at [this link](secrets-policy-execution-role.json).
+2. Add the `AmazonECSTaskExecutionRolePolicy` policy and the [Secrets policy execution role](secrets-policy-execution-role.json) to the execution IAM role created in step 1.
 
-3. Specify the *Execution role* ARN in the field "Batch execution role" in the Tower compute environment creation
-  advanced settings.
+3. Specify the Execution role ARN in the **Batch execution role** field in the Seqera compute environment advanced settings.
 
-4. Add the custom policy at [this link](secrets-policy-instance-role.json) to the ECS Instance role
-  associated to the Batch compute environment that's going to be used to deploy your pipelines.
-  Find more details about the Instance role at [this link](https://docs.aws.amazon.com/batch/latest/userguide/instance_IAM_role.html).
+4. Add the [Secrets policy instance role](secrets-policy-instance-role.json) to the ECS Instance role assigned to the Batch compute environment where your pipelines will be deployed. See [Amazon ECS instance role](https://docs.aws.amazon.com/batch/latest/userguide/instance_IAM_role.html) for more information.
 
-5. Add the custom policy at [this link](secrets-policy-account.json) to the IAM user or role granting
-  access to your AWS account to Tower (the one specified in the Tower credentials).
+5. Add the [Secrets policy](secrets-policy-account.json) to the IAM user or role used by Seqera to access your AWS account (specified in the Seqera credentials).
 
