@@ -8,33 +8,33 @@
         "files":{
            "collect_list":[
               {
-                 "file_path":"/var/log/tower-ce.log",
-                 "log_group_name":"tower/ce",
-                 "log_stream_name":"ce/{instance_id}",
+                 "file_path":"/var/log/seqera-ce.log",
+                 "log_group_name":"seqera/ce",
+                 "log_stream_name":"seqera-prefix/ce/{instance_id}",
                  "retention_in_days": 7
               },
               {
                  "file_path":"/var/log/ebs-autoscale.log",
-                 "log_group_name":"tower/ebs-autoscale",
-                 "log_stream_name":"ebs-autoscale/{instance_id}",
+                 "log_group_name":"seqera/ebs-autoscale",
+                 "log_stream_name":"seqera-prefix/ebs-autoscale/{instance_id}",
                  "retention_in_days": 7
               },
               {
                  "file_path":"/var/log/cloud-init.log",
-                 "log_group_name":"tower/cloud-init",
-                 "log_stream_name":"cloud-init/{instance_id}",
+                 "log_group_name":"seqera/cloud-init",
+                 "log_stream_name":"seqera-prefix/cloud-init/{instance_id}",
                  "retention_in_days": 7
               },
               {
                  "file_path":"/var/log/cloud-init-output.log",
-                 "log_group_name":"tower/cloud-init-output",
-                 "log_stream_name":"cloud-init-output/{instance_id}",
+                 "log_group_name":"seqera/cloud-init-output",
+                 "log_stream_name":"seqera-prefix/cloud-init-output/{instance_id}",
                  "retention_in_days": 7
               },
               {
                  "file_path":"/var/log/ecs/ecs-agent.log",
-                 "log_group_name":"tower/ecs-agent",
-                 "log_stream_name":"ecs-agent/{instance_id}",
+                 "log_group_name":"seqera/ecs-agent",
+                 "log_stream_name":"seqera-prefix/ecs-agent/{instance_id}",
                  "retention_in_days": 7
               }
            ]
