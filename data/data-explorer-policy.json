@@ -8,7 +8,7 @@
 				"s3:PutObject",
 				"s3:GetObject"
 			],
-			"Resource": "*"
+			"Resource": "arn:aws:s3:::*"
 			// Note: The above resource can be scoped one or more a specific buckets or bucket prefixes, for example:
 			// "Resource": "arn:aws:s3:::seqera-showcase/*"
 		}
