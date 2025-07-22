@@ -3,12 +3,12 @@
 > [!WARNING]
 > This example IAM policy is intended for use with Seqera Forge and provides a wide range of permissions to support common deployment scenarios. However, it may not be appropriate for all environments or security requirements. You should carefully review and tailor this policy to fit your organization's security standards and operational needs. See [IAM Policy Configuration & Tuning](#iam-policy-configuration--tuning) for more details.
 
-Seqera Forge automates the configuration of [AWS Batch](https://aws.amazon.com/batch/) compute environments and queues
+Seqera Platform Forge automates the configuration of [AWS Batch](https://aws.amazon.com/batch/) compute environments and queues
 required for the deployment of Nextflow pipelines.
 
 To enable this feature, Seqera Platform requires the permissions listed in [this policy](forge-policy.json) file.
 
-Attach the policy to the AWS user account associated to your Seqera configuration as described below:
+Attach the policy to the AWS IAM User associated to your Seqera configuration as described below:
 
 1. Open the AWS [IAM console](https://console.aws.amazon.com/iam/home) and select **Users**.
 1. Select or create the user associated with your Seqera configuration.
@@ -18,7 +18,7 @@ Attach the policy to the AWS user account associated to your Seqera configuratio
 
 ### Pipeline secrets
 
-To use pipeline secrets in Seqera Platform, the following IAM permissions must be provided:
+To use [pipeline secrets](https://docs.seqera.io/platform/secrets/) (AWS Secrets Manager integration) in Seqera Platform, the following IAM permissions must be provided:
 
 Add [this custom policy](../launch/secrets-policy-account.json) to the IAM user or role used by Seqera to access your AWS account (specified in the Seqera credentials).
 
@@ -37,7 +37,7 @@ You can scope down the policy using:
 3. Resource tagging
 
 > [!NOTE]
-> If you've configured a custom prefix in your Seqera Platform Enterprise Self-Hosted installation, remember to update the resource pattern accordingly.
+> If you've configured a custom prefix for Compute Environments and IAM roles in your Seqera Platform Enterprise Self-Hosted installation, remember to update the resource pattern accordingly.
 
 ### AWS Systems Manager (SSM)
 
@@ -59,7 +59,7 @@ Seqera Platform requires access to read from AWS Systems Manager (SSM) to [ident
 
 ### IAM Role Configuration
 
-Seqera Batch Forge by default creates and manages the lifecycle of IAM Roles & Policies. During Compute Environment creation, you can optionally provide pre-provisioned roles for your Compute Environment, Head Job, and Instance profile, eliminating the need for these permissions.
+Seqera Platform Batch Forge by default creates and manages the lifecycle of IAM Roles & Policies used by Nextflow pipelines in Compute Environments. During Compute Environment creation, you can optionally provide pre-provisioned roles for your Compute Environment, Head Job, and Instance profile, eliminating the need for these permissions.
 
 If you want to allow Forge to manage IAM roles but restrict its permissions, you can use the following policy:
 

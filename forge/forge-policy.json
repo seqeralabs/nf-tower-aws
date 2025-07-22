@@ -5,7 +5,7 @@
       "Sid": "SSMParameterAccess",
       "Effect": "Allow",
       "Action": "ssm:GetParameters",
-      "Resource": "*"
+      "Resource": "arn:aws:ssm:*:*:parameter/aws/service/ecs/*"
     },
     {
       "Sid": "IAMRoleAndProfileManagement",
