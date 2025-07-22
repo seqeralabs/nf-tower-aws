@@ -110,7 +110,7 @@ You can restrict this permission to only allow passing roles with the appropriat
 ### Batch Execution
 
 Seqera Platform requires the ability to trigger workflows using AWS Batch when using it as a compute environment.
-You can restrict this permission based on ARN or Resrouce tag, when using AWS for
+You can restrict this permission based on ARN or Resource tag, like the following:
 
 ```json
 {
@@ -135,11 +135,13 @@ You can restrict this permission based on ARN or Resrouce tag, when using AWS fo
 }
 ```
 
-### FSXManagement
+### FSx File Systems
+
+Allow Forge to manage [AWS FSx file systems](https://aws.amazon.com/fsx/).
 
 ```json
 {
-  "Sid": "EFSAndFSxManagement",
+  "Sid": "FSx",
   "Effect": "Allow",
   "Action": [
     "fsx:CreateFileSystem",
@@ -151,7 +153,9 @@ You can restrict this permission based on ARN or Resrouce tag, when using AWS fo
 }
 ```
 
-###
+### EFS File Systems
+
+Allow Forge to manage [AWS EFS file systems](https://aws.amazon.com/efs/).
 
 ```json
 {
@@ -195,7 +199,7 @@ Seqera Platform requires the ability to create and manage EC2 launch templates u
 
 ### S3 Data Access
 
-Seqera Platform requires access to AWS S3 to list and inspect the contents of S3 buckets for Studios , DataExplorer and Identifying the Nextflow working directory.
+Seqera Platform requires access to AWS S3 to list and inspect the contents of S3 buckets for Studios, DataExplorer and Identifying the Nextflow working directory.
 
 This policy can be scoped down to list all buckets in the account along with limiting data retrieval to specific buckets.
 
@@ -203,7 +207,7 @@ This policy can be scoped down to list all buckets in the account along with lim
 {
   "Sid": "S3ListBuckets",
   "Effect": "Allow",
-  "Action": ["s3:List*"],
+  "Action": ["s3:ListAllMyBuckets"],
   "Resource": "*"
 },
 {
@@ -245,11 +249,11 @@ This policy can be scoped down to the specific log group used by the compute env
 
 ### SES Policy
 
-NextFlow is capable of sending enable email reports from your Nextflow pipeline (such as MultiQC), requires Amazon SES (Simple Email Service) permissions. You can restrict these permissions to specific sender addresses:
+NextFlow is capable of sending email reports from your Nextflow pipeline (such as MultiQC reports) via Amazon SES (Simple Email Service) permissions. You can restrict these permissions to specific sender and recipient addresses:
 
 ```json
 {
-  "Sid": "AllowSendingFromSeqeraPlatform",
+  "Sid": "AllowEmailSendingFromSeqeraPlatform",
   "Effect": "Allow",
   "Action": "ses:SendRawEmail",
   "Resource": "*",
