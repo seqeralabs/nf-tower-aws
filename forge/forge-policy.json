@@ -2,7 +2,7 @@
   "Version": "2012-10-17",
   "Statement": [
     {
-      "Sid": "SSMParameterAccess",
+      "Sid": "FetchECSOptimizedAMIMetadata",
       "Effect": "Allow",
       "Action": "ssm:GetParameters",
       "Resource": "arn:aws:ssm:*:*:parameter/aws/service/ecs/*"
@@ -30,7 +30,7 @@
       "Resource": "*"
     },
     {
-      "Sid": "PassRole",
+      "Sid": "PassOnlyTowerForgeRolesToBatch",
       "Effect": "Allow",
       "Action": "iam:PassRole",
       "Resource": "*"
