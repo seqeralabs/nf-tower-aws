@@ -138,47 +138,6 @@ You can restrict this permission based on ARN or Resource tag (these need to be 
 }
 ```
 
-### FSx File Systems (optional)
-
-Allow Forge to manage [AWS FSx file systems](https://aws.amazon.com/fsx/), if needed by the pipelines.
-
-```json
-{
-  "Sid": "FSx",
-  "Effect": "Allow",
-  "Action": [
-    "fsx:CreateFileSystem",
-    "fsx:DeleteFileSystem",
-    "fsx:DescribeFileSystems",
-    "fsx:TagResource"
-  ],
-  "Resource": "*"
-}
-```
-
-### EFS File Systems (optional)
-
-Allow Forge to manage [AWS EFS file systems](https://aws.amazon.com/efs/), if needed by the pipelines.
-
-```json
-{
-  "Sid": "EFS",
-  "Effect": "Allow",
-  "Action": [
-    "elasticfilesystem:CreateFileSystem",
-    "elasticfilesystem:DeleteFileSystem",
-    "elasticfilesystem:CreateMountTarget",
-    "elasticfilesystem:DeleteMountTarget",
-    "elasticfilesystem:DescribeFileSystems",
-    "elasticfilesystem:DescribeMountTargets",
-    "elasticfilesystem:UpdateFileSystem",
-    "elasticfilesystem:PutLifecycleConfiguration",
-    "elasticfilesystem:TagResource"
-  ],
-  "Resource": "*"
-}
-```
-
 ### Launch Template Management.
 
 Seqera Platform requires the ability to create and manage EC2 launch templates using optimized AMIs identified via AWS Systems Manager (SSM).
@@ -247,6 +206,47 @@ This policy can be scoped down to the specific log group used by the compute env
     "logs:FilterLogEvents"
   ],
   "Resource": "arn:aws:logs:<REGION>:<ACCOUNT_ID>:log-group:/aws/batch/job/*"
+}
+```
+
+### FSx File Systems (optional)
+
+Allow Forge to manage [AWS FSx file systems](https://aws.amazon.com/fsx/), if needed by the pipelines.
+
+```json
+{
+  "Sid": "FSx",
+  "Effect": "Allow",
+  "Action": [
+    "fsx:CreateFileSystem",
+    "fsx:DeleteFileSystem",
+    "fsx:DescribeFileSystems",
+    "fsx:TagResource"
+  ],
+  "Resource": "*"
+}
+```
+
+### EFS File Systems (optional)
+
+Allow Forge to manage [AWS EFS file systems](https://aws.amazon.com/efs/), if needed by the pipelines.
+
+```json
+{
+  "Sid": "EFS",
+  "Effect": "Allow",
+  "Action": [
+    "elasticfilesystem:CreateFileSystem",
+    "elasticfilesystem:DeleteFileSystem",
+    "elasticfilesystem:CreateMountTarget",
+    "elasticfilesystem:DeleteMountTarget",
+    "elasticfilesystem:DescribeFileSystems",
+    "elasticfilesystem:DescribeMountTargets",
+    "elasticfilesystem:UpdateFileSystem",
+    "elasticfilesystem:PutLifecycleConfiguration",
+    "elasticfilesystem:TagResource"
+  ],
+  "Resource": "*"
 }
 ```
 

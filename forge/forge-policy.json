@@ -66,37 +66,6 @@
       "Resource": "*"
     },
     {
-      "Sid": "EFSManagement",
-      "Effect": "Allow",
-      "Action": [
-        "elasticfilesystem:CreateFileSystem",
-        "elasticfilesystem:DeleteFileSystem",
-        "elasticfilesystem:CreateMountTarget",
-        "elasticfilesystem:DeleteMountTarget",
-        "elasticfilesystem:DescribeFileSystems",
-        "elasticfilesystem:DescribeMountTargets",
-        "elasticfilesystem:UpdateFileSystem",
-        "elasticfilesystem:PutLifecycleConfiguration",
-        "elasticfilesystem:TagResource",
-        "fsx:CreateFileSystem",
-        "fsx:DeleteFileSystem",
-        "fsx:DescribeFileSystems",
-        "fsx:TagResource"
-      ],
-      "Resource": "*"
-    },
-    {
-      "Sid": "FSXManagement",
-      "Effect": "Allow",
-      "Action": [
-        "fsx:CreateFileSystem",
-        "fsx:DeleteFileSystem",
-        "fsx:DescribeFileSystems",
-        "fsx:TagResource"
-      ],
-      "Resource": "*"
-    },
-    {
       "Sid": "LaunchTemplateManagement",
       "Effect": "Allow",
       "Action": [
@@ -136,7 +105,7 @@
       "Resource": "*"
     },
     {
-      "Sid": "S3TowerDataAccess",
+      "Sid": "S3PlatformDataAccess",
       "Effect": "Allow",
       "Action": [
         "s3:Get*",
@@ -159,7 +128,38 @@
       "Resource": "*"
     },
     {
-      "Sid": "AllowNextFlowToSendEmails",
+      "Sid": "OptionalEFSManagement",
+      "Effect": "Allow",
+      "Action": [
+        "elasticfilesystem:CreateFileSystem",
+        "elasticfilesystem:DeleteFileSystem",
+        "elasticfilesystem:CreateMountTarget",
+        "elasticfilesystem:DeleteMountTarget",
+        "elasticfilesystem:DescribeFileSystems",
+        "elasticfilesystem:DescribeMountTargets",
+        "elasticfilesystem:UpdateFileSystem",
+        "elasticfilesystem:PutLifecycleConfiguration",
+        "elasticfilesystem:TagResource",
+        "fsx:CreateFileSystem",
+        "fsx:DeleteFileSystem",
+        "fsx:DescribeFileSystems",
+        "fsx:TagResource"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "OptionalFSXManagement",
+      "Effect": "Allow",
+      "Action": [
+        "fsx:CreateFileSystem",
+        "fsx:DeleteFileSystem",
+        "fsx:DescribeFileSystems",
+        "fsx:TagResource"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "OptionalAllowNextFlowToSendEmails",
       "Effect": "Allow",
       "Action": "ses:SendRawEmail",
       "Resource": "*"
