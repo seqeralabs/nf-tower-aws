@@ -43,15 +43,10 @@ Seqera Platform requires access to read from AWS Systems Manager (SSM) to [ident
 
 ```json
 {
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Sid": "FetchECSOptimizedAMIMetadata",
-      "Effect": "Allow",
-      "Action": "ssm:GetParameters",
-      "Resource": ["arn:aws:ssm:*:<ACCOUNT_ID>:parameter/aws/service/ecs/*"]
-    }
-  ]
+  "Sid": "FetchECSOptimizedAMIMetadata",
+  "Effect": "Allow",
+  "Action": "ssm:GetParameters",
+  "Resource": ["arn:aws:ssm:*:<ACCOUNT_ID>:parameter/aws/service/ecs/*"]
 }
 ```
 
