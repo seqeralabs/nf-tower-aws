@@ -107,22 +107,38 @@ You can restrict this permission based on ARN or Resource tag (these need to be 
 
 ```json
 {
+  "Sid": "BatchEnvironmentManagement",
+  "Effect": "Allow",
+  "Action": [
+    "batch:CreateComputeEnvironment",
+    "batch:CreateJobQueue",
+    "batch:DeleteComputeEnvironment",
+    "batch:DeleteJobQueue",
+    "batch:DescribeComputeEnvironments",
+    "batch:DescribeJobQueues",
+    "batch:UpdateComputeEnvironment",
+    "batch:UpdateJobQueue"
+  ],
+  "Resource": [
+    "arn:aws:batch:<REGION>:<ACCOUNT_ID>:compute-environment/TowerForge-*",
+    "arn:aws:batch:<REGION>:<ACCOUNT_ID>:job-queue/TowerForge-*"
+  ]
+},
+{
   "Sid": "BatchJobExecution",
   "Effect": "Allow",
   "Action": [
-    "batch:SubmitJob",
     "batch:CancelJob",
-    "batch:TerminateJob",
-    "batch:ListJobs",
-    "batch:DescribeJobs",
-    "batch:RegisterJobDefinition",
     "batch:DescribeJobDefinitions",
-    "batch:TagResource"
+    "batch:DescribeJobs",
+    "batch:ListJobs",
+    "batch:RegisterJobDefinition",
+    "batch:SubmitJob",
+    "batch:TagResource",
+    "batch:TerminateJob"
   ],
   "Resource": [
-    "arn:aws:batch:<REGION>:<ACCOUNT_ID>:compute-environment/TowerForge-*"
-    "arn:aws:batch:<REGION>:<ACCOUNT_ID>:job-queue/TowerForge-*"
-    "arn:aws:batch:<REGION>:<ACCOUNT_ID>:job-definition/*"
+    "arn:aws:batch:<REGION>:<ACCOUNT_ID>:job-definition/*",
     "arn:aws:batch:<REGION>:<ACCOUNT_ID>:job/*"
   ]
   "Condition": {
