@@ -159,21 +159,10 @@ You can restrict this permission based on ARN or Resource tag (these need to be 
 Seqera Platform requires the ability to create and manage EC2 launch templates using optimized AMIs identified via AWS Systems Manager (SSM).
 
 > [!NOTE]
-> AWS does not support restricting IAM permissions on EC2 launch templates based on specific resource names or tags. Because of this limitation, it is not currently possible to scope IAM permissions to specific launch templates. As a result, broader permissions must be granted.
-
-```json
-{
-  "Sid": "LaunchTemplateManagement",
-  "Effect": "Allow",
-  "Action": [
-    "ec2:CreateLaunchTemplate",
-    "ec2:DeleteLaunchTemplate",
-    "ec2:DescribeLaunchTemplates",
-    "ec2:DescribeLaunchTemplateVersions"
-  ],
-  "Resource": "*"
-}
-```
+> AWS does not support restricting IAM permissions on EC2 launch templates based on specific
+> resource names or tags. Because of this limitation, it is not currently possible to scope IAM
+> permissions to specific launch templates. As a result, permission to operate on any resource `*`
+> must be granted.
 
 ### S3 Data Access
 
