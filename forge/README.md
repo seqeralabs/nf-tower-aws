@@ -18,9 +18,7 @@ Attach the policy to the AWS IAM User associated to your Seqera configuration as
 
 ### Pipeline secrets
 
-To use [pipeline secrets](https://docs.seqera.io/platform/secrets/) (AWS Secrets Manager integration) in Seqera Platform, the following IAM permissions must be provided:
-
-Add [this custom policy](../launch/secrets-policy-account.json) to the IAM user or role used by Seqera to access your AWS account (specified in the Seqera credentials).
+To use [pipeline secrets](https://docs.seqera.io/platform/secrets/) (AWS Secrets Manager integration) in Seqera Platform, add [this custom policy](../launch/secrets-policy-account.json) to the IAM user used by Seqera Platform to access your AWS account.
 
 See [Seqera Launch](../launch/README.md) for more details.
 
@@ -30,14 +28,14 @@ The example [Batch Forge Policy](forge-policy.json) provides comprehensive permi
 
 ### Restricting Permissions
 
-You can scope down the policy using:
+This Readme explains how you can scope down the policy using:
 
 1. Resource-level restrictions
 2. AWS condition keys
 3. Resource tagging
 
 > [!NOTE]
-> If you've configured a custom prefix for Compute Environments and IAM roles in your Seqera Platform Enterprise Self-Hosted installation, remember to update the resource pattern accordingly.
+> If you've configured a custom prefix for Compute Environments and IAM roles in your Seqera Platform Enterprise installation, remember to update the resource pattern accordingly.
 
 ### AWS Systems Manager (SSM)
 
@@ -48,10 +46,10 @@ Seqera Platform requires access to read from AWS Systems Manager (SSM) to [ident
   "Version": "2012-10-17",
   "Statement": [
     {
-      "Sid": "ServiceParameters",
+      "Sid": "FetchECSOptimizedAMIMetadata",
       "Effect": "Allow",
       "Action": "ssm:GetParameters",
-      "Resource": ["arn:aws:ssm:*:*:parameter/aws/service/ecs/*"]
+      "Resource": ["arn:aws:ssm:*:<ACCOUNT_ID>:parameter/aws/service/ecs/*"]
     }
   ]
 }
@@ -59,7 +57,7 @@ Seqera Platform requires access to read from AWS Systems Manager (SSM) to [ident
 
 ### IAM Role Configuration
 
-Seqera Platform Batch Forge by default creates and manages the lifecycle of IAM Roles & Policies used by Nextflow pipelines in Compute Environments. During Compute Environment creation, you can optionally provide pre-provisioned roles for your Compute Environment, Head Job, and Instance profile, eliminating the need for these permissions.
+Seqera Platform Batch Forge by default creates and manages the lifecycle of IAM Roles & Policies used by Nextflow pipelines in Compute Environments. During Compute Environment creation, you can optionally define pre-provisioned roles for your Compute Environment, Head Job, and Instance profile, eliminating the need for these permissions.
 
 If you want to allow Forge to manage IAM roles but restrict its permissions, you can use the following policy:
 
@@ -110,7 +108,7 @@ You can restrict this permission to only allow passing roles with the appropriat
 ### Batch Execution
 
 Seqera Platform requires the ability to trigger workflows using AWS Batch when using it as a compute environment.
-You can restrict this permission based on ARN or Resource tag, like the following:
+You can restrict this permission based on ARN or Resource tag (these need to be [set by users when setting up a pipeline in Platform](https://docs.seqera.io/platform-enterprise/resource-labels/overview)), like the following:
 
 ```json
 {
@@ -126,18 +124,23 @@ You can restrict this permission based on ARN or Resource tag, like the followin
     "batch:DescribeJobDefinitions",
     "batch:TagResource"
   ],
-  "Resource": "arn:aws:iam::<ACCOUNT_ID>:role/TowerForge-*",
+  "Resource": [
+    "arn:aws:batch:<REGION>:<ACCOUNT_ID>:compute-environment/TowerForge-*"
+    "arn:aws:batch:<REGION>:<ACCOUNT_ID>:job-queue/TowerForge-*"
+    "arn:aws:batch:<REGION>:<ACCOUNT_ID>:job-definition/*"
+    "arn:aws:batch:<REGION>:<ACCOUNT_ID>:job/*"
+  ]
   "Condition": {
     "StringEqualsIfExists": {
-      "aws:ResourceTag/Project": "Tower"
+      "aws:ResourceTag/MyCustomTag": "MyCustomValue"
     }
   }
 }
 ```
 
-### FSx File Systems
+### FSx File Systems (optional)
 
-Allow Forge to manage [AWS FSx file systems](https://aws.amazon.com/fsx/).
+Allow Forge to manage [AWS FSx file systems](https://aws.amazon.com/fsx/), if needed by the pipelines.
 
 ```json
 {
@@ -153,9 +156,9 @@ Allow Forge to manage [AWS FSx file systems](https://aws.amazon.com/fsx/).
 }
 ```
 
-### EFS File Systems
+### EFS File Systems (optional)
 
-Allow Forge to manage [AWS EFS file systems](https://aws.amazon.com/efs/).
+Allow Forge to manage [AWS EFS file systems](https://aws.amazon.com/efs/), if needed by the pipelines.
 
 ```json
 {
@@ -201,7 +204,7 @@ Seqera Platform requires the ability to create and manage EC2 launch templates u
 
 Seqera Platform requires access to AWS S3 to list and inspect the contents of S3 buckets for Studios, DataExplorer and Identifying the Nextflow working directory.
 
-This policy can be scoped down to list all buckets in the account along with limiting data retrieval to specific buckets.
+This policy can be scoped down to only allow listing the buckets in the account along with limiting data retrieval to specific buckets.
 
 ```json
 {
@@ -247,7 +250,7 @@ This policy can be scoped down to the specific log group used by the compute env
 }
 ```
 
-### SES Policy
+### SES Policy (optional)
 
 NextFlow is capable of sending email reports from your Nextflow pipeline (such as MultiQC reports) via Amazon SES (Simple Email Service) permissions. You can restrict these permissions to specific sender and recipient addresses:
 
@@ -259,7 +262,7 @@ NextFlow is capable of sending email reports from your Nextflow pipeline (such a
   "Resource": "*",
   "Condition": {
     "StringEquals": {
-      "ses:FromAddress": "nextflow@example.com"
+      "ses:FromAddress": "seqera-platform-installation@example.com"
     },
     "ForAllValues:StringLike": {
       "ses:Recipients": ["*@example.com"]
