@@ -122,7 +122,12 @@ You can restrict this permission based on ARN or Resource tag (these need to be 
   "Resource": [
     "arn:aws:batch:<REGION>:<ACCOUNT_ID>:compute-environment/TowerForge-*",
     "arn:aws:batch:<REGION>:<ACCOUNT_ID>:job-queue/TowerForge-*"
-  ]
+  ],
+  "Condition": {
+    "StringEqualsIfExists": {
+      "aws:ResourceTag/MyCustomTag": "MyCustomValue"
+    }
+  }
 },
 {
   "Sid": "BatchJobExecution",
@@ -140,7 +145,7 @@ You can restrict this permission based on ARN or Resource tag (these need to be 
   "Resource": [
     "arn:aws:batch:<REGION>:<ACCOUNT_ID>:job-definition/*",
     "arn:aws:batch:<REGION>:<ACCOUNT_ID>:job/*"
-  ]
+  ],
   "Condition": {
     "StringEqualsIfExists": {
       "aws:ResourceTag/MyCustomTag": "MyCustomValue"
