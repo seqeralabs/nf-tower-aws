@@ -26,7 +26,10 @@
         "Sid": "AllowEc2AssumeRole",
         "Effect": "Allow",
         "Principal": {
-          "AWS": "arn:aws:iam::YOUR-AWS-ACCOUNT:USER-OR-ROLE/USER-OR-ROLE-ID"
+          "AWS": [
+            "arn:aws:iam::<ACCOUNT_ID>:user/<USER_NAME>",
+            "arn:aws:iam::<ACCOUNT_ID>:role/<ROLE_NAME>"
+          ]
         },
         "Action": "sts:AssumeRole"
       }

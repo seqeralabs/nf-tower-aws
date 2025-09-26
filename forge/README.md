@@ -1,37 +1,35 @@
-# Seqera Platform Forge for AWS Batch
+# Seqera Batch Forge for AWS Batch
+
+Seqera Platform can automate the configuration of [AWS Batch](https://aws.amazon.com/batch/) compute
+environments and job queues for Nextflow pipelines using Batch Forge. As described in
+the [introduction](../README.md), Forge will take care of creating AWS IAM Roles for each compute
+environment, so the policies described in the [`launch/`](../launch) section are **not needed**.
+
+To enable Batch Forge, the IAM user you configure in your Seqera Platform workspace requires the
+permissions listed in the [`forge-policy.json`](forge-policy.json) file. Full instructions are
+available in the [Seqera
+documentation](https://docs.seqera.io/platform-cloud/compute-envs/aws-batch#batch-forge) to
+configure a IAM User for Batch Forge.
 
 > [!WARNING]
-> This example IAM policy is intended for use with Seqera Forge and provides a wide range of permissions to support common deployment scenarios. However, it may not be appropriate for all environments or security requirements. You should carefully review and tailor this policy to fit your organization's security standards and operational needs. See [IAM Policy Configuration & Tuning](#iam-policy-configuration--tuning) for more details.
+> The generic [`forge-policy.json`](forge-policy.json) IAM policy is intended for use with Seqera
+> Forge only, and uses wide permissions to support common deployment scenarios.
+> However, we recognize that it may not be appropriate for all environments or security
+> requirements. You should carefully review and tailor the generic policy to fit your organization's
+> security standards and operational needs, as described in this document.
 
-Seqera Platform Forge automates the configuration of [AWS Batch](https://aws.amazon.com/batch/) compute environments and queues
-required for the deployment of Nextflow pipelines.
+## Restricting Permissions
 
-To enable this feature, Seqera Platform requires the permissions listed in [this policy](forge-policy.json) file.
-
-Attach the policy to the AWS IAM User associated to your Seqera configuration as described below:
-
-1. Open the AWS [IAM console](https://console.aws.amazon.com/iam/home) and select **Users**.
-1. Select or create the user associated with your Seqera configuration.
-1. Select **Add inline policy**.
-1. Select **JSON** and copy the content of the policy linked above.
-1. Select **Review policy** and then **Create policy**.
-
-
-
-## IAM Policy Configuration & Tuning
-
-The example [Batch Forge Policy](forge-policy.json) provides comprehensive permissions for quick setup. However, you should review and adapt this policy to fit your specific security requirements.
-
-### Restricting Permissions
-
-This Readme explains how you can scope down the policy using:
+This Readme file explains how you can scope down the policy using:
 
 1. Resource-level restrictions
 2. AWS condition keys
 3. Resource tagging
 
 > [!NOTE]
-> If you've configured a custom prefix for Compute Environments and IAM roles in your Seqera Platform Enterprise installation, remember to update the resource pattern accordingly.
+> If you've configured a custom prefix for Compute Environments and IAM roles in your Seqera
+> Platform Enterprise installation, remember to update `TowerForge-*` with the resource pattern
+> you're using.
 
 ### AWS Systems Manager (SSM)
 
@@ -42,7 +40,7 @@ Seqera Platform requires access to read from AWS Systems Manager (SSM) to [ident
   "Sid": "FetchECSOptimizedAMIMetadata",
   "Effect": "Allow",
   "Action": "ssm:GetParameters",
-  "Resource": ["arn:aws:ssm:*:<ACCOUNT_ID>:parameter/aws/service/ecs/*"]
+  "Resource": "arn:aws:ssm:*:*:parameter/aws/service/ecs/*"
 }
 ```
 

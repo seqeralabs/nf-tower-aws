@@ -1,6 +1,11 @@
-# changelog 
-v1.1.0 - 5 Oct 2022
-- Add permissions required by Resource Labels / Tags feature 
+# changelog
 
-v1.0.0 
+## v1.2.0 - 26 Sep 2025
+- Split Forge policy into multiple statements for better clarity
+- Improve documentation around IAM permissions, resource scoping and launch/forge differences
+
+## v1.1.0 - 5 Oct 2022
+- Add permissions required by Resource Labels / Tags feature
+
+## v1.0.0
 - Initial release
