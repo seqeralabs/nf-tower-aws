@@ -16,11 +16,7 @@ Attach the policy to the AWS IAM User associated to your Seqera configuration as
 1. Select **JSON** and copy the content of the policy linked above.
 1. Select **Review policy** and then **Create policy**.
 
-### Pipeline secrets
 
-To use [pipeline secrets](https://docs.seqera.io/platform/secrets/) (AWS Secrets Manager integration) in Seqera Platform, add [this custom policy](../launch/secrets-policy-account.json) to the IAM user used by Seqera Platform to access your AWS account.
-
-See [Seqera Launch](../launch/README.md) for more details.
 
 ## IAM Policy Configuration & Tuning
 

@@ -2,7 +2,7 @@
     "Version": "2012-10-17",
     "Statement": [
         {
-            "Sid": "TowerLaunch0",
+            "Sid": "PlatformLaunch",
             "Effect": "Allow",
             "Action": [
                 "batch:DescribeJobQueues",
@@ -16,10 +16,10 @@
                 "batch:RegisterJobDefinition",
                 "batch:DescribeJobDefinitions",
                 "ecs:DescribeTasks",
+                "ecs:DescribeContainerInstances",
                 "ec2:DescribeInstances",
                 "ec2:DescribeInstanceTypes",
                 "ec2:DescribeInstanceAttribute",
-                "ecs:DescribeContainerInstances",
                 "ec2:DescribeInstanceStatus",
                 "ec2:DescribeImages",
                 "logs:Describe*",
