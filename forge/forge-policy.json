@@ -129,13 +129,19 @@
     {
       "Sid": "ECSDescribe",
       "Effect": "Allow",
-      "Action": ["ecs:DescribeTasks", "ecs:DescribeContainerInstances"],
+      "Action": [
+        "ecs:DescribeTasks",
+        "ecs:DescribeContainerInstances"
+      ],
       "Resource": "*"
     },
     {
       "Sid": "S3TowerDataAccess",
       "Effect": "Allow",
-      "Action": ["s3:Get*", "s3:List*"],
+      "Action": [
+        "s3:Get*",
+        "s3:List*"
+      ],
       "Resource": "*"
     },
     {
