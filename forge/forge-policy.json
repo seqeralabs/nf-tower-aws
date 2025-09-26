@@ -40,13 +40,13 @@
       "Effect": "Allow",
       "Action": [
         "batch:CreateComputeEnvironment",
-        "batch:UpdateComputeEnvironment",
-        "batch:DeleteComputeEnvironment",
         "batch:CreateJobQueue",
-        "batch:UpdateJobQueue",
+        "batch:DeleteComputeEnvironment",
         "batch:DeleteJobQueue",
         "batch:DescribeComputeEnvironments",
-        "batch:DescribeJobQueues"
+        "batch:DescribeJobQueues",
+        "batch:UpdateComputeEnvironment",
+        "batch:UpdateJobQueue"
       ],
       "Resource": "*"
     },
@@ -54,14 +54,14 @@
       "Sid": "BatchJobExecution",
       "Effect": "Allow",
       "Action": [
-        "batch:SubmitJob",
         "batch:CancelJob",
-        "batch:TerminateJob",
-        "batch:ListJobs",
-        "batch:DescribeJobs",
-        "batch:RegisterJobDefinition",
         "batch:DescribeJobDefinitions",
-        "batch:TagResource"
+        "batch:DescribeJobs",
+        "batch:ListJobs",
+        "batch:RegisterJobDefinition",
+        "batch:SubmitJob",
+        "batch:TagResource",
+        "batch:TerminateJob"
       ],
       "Resource": "*"
     },
