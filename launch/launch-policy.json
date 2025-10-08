@@ -2,7 +2,7 @@
   "Version": "2012-10-17",
   "Statement": [
     {
-      "Sid": "SubmitJobsToBatchAndMonitor",
+      "Sid": "SubmitJobsToBatchAndMonitorCanBeRestricted",
       "Effect": "Allow",
       "Action": [
         "batch:CancelJob",
@@ -34,7 +34,7 @@
     //   "Resource": "*"
     // },
     {
-      "Sid": "S3PlatformDataAccess",
+      "Sid": "S3PlatformDataAccessCanBeRestricted",
       "Effect": "Allow",
       "Action": [
         "s3:Get*",
@@ -43,7 +43,7 @@
       "Resource": "*"
     },
     {
-      "Sid": "PassRolesToBatch",
+      "Sid": "PassRolesToBatchCanBeRestricted",
       "Effect": "Allow",
       "Action": "iam:PassRole",
       "Resource": "*",
@@ -54,7 +54,7 @@
       }
     },
     {
-      "Sid": "CloudWatchLogsAccess",
+      "Sid": "CloudWatchLogsAccessCanBeRestricted",
       "Effect": "Allow",
       "Action": [
         "logs:Describe*",
@@ -84,7 +84,7 @@
       "Resource": "arn:aws:secretsmanager:*:*:secret:tower-*"
     },
     {
-      "Sid": "AllowEmailSendingFromSeqeraPlatform",
+      "Sid": "OptionalAllowSeqeraPlatformToSendEmailsCanBeRestricted",
       "Effect": "Allow",
       "Action": "ses:SendRawEmail",
       "Resource": "*"
