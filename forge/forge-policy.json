@@ -2,51 +2,6 @@
   "Version": "2012-10-17",
   "Statement": [
     {
-        "Sid": "PipelineSecretsManagement",
-        "Effect": "Allow",
-        "Action": [
-            "secretsmanager:DescribeSecret",
-            "secretsmanager:DeleteSecret",
-            "secretsmanager:ListSecrets",
-            "secretsmanager:CreateSecret"
-        ],
-        "Resource": "*"
-    },
-    {
-      "Sid": "FetchECSOptimizedAMIMetadata",
-      "Effect": "Allow",
-      "Action": "ssm:GetParameters",
-      "Resource": "arn:aws:ssm:*:*:parameter/aws/service/ecs/*"
-    },
-    {
-      "Sid": "IAMRoleAndProfileManagement",
-      "Effect": "Allow",
-      "Action": [
-        "iam:CreateInstanceProfile",
-        "iam:DeleteInstanceProfile",
-        "iam:AddRoleToInstanceProfile",
-        "iam:RemoveRoleFromInstanceProfile",
-        "iam:CreateRole",
-        "iam:DeleteRole",
-        "iam:GetRole",
-        "iam:AttachRolePolicy",
-        "iam:DetachRolePolicy",
-        "iam:PutRolePolicy",
-        "iam:DeleteRolePolicy",
-        "iam:ListAttachedRolePolicies",
-        "iam:ListRolePolicies",
-        "iam:TagRole",
-        "iam:TagInstanceProfile"
-      ],
-      "Resource": "*"
-    },
-    {
-      "Sid": "PassOnlyTowerForgeRolesToBatch",
-      "Effect": "Allow",
-      "Action": "iam:PassRole",
-      "Resource": "*"
-    },
-    {
       "Sid": "BatchEnvironmentManagement",
       "Effect": "Allow",
       "Action": [
@@ -88,24 +43,64 @@
       "Resource": "*"
     },
     {
-      "Sid": "EC2MetadataDescribe",
+      "Sid": "FetchECSOptimizedAMIMetadata",
+      "Effect": "Allow",
+      "Action": "ssm:GetParameters",
+      "Resource": "arn:aws:ssm:*:*:parameter/aws/service/ecs/*"
+    },
+    {
+      "Sid": "IAMRoleAndProfileManagement",
       "Effect": "Allow",
       "Action": [
-        "ec2:DescribeSecurityGroups",
-        "ec2:DescribeAccountAttributes",
-        "ec2:DescribeSubnets",
-        "ec2:DescribeKeyPairs",
-        "ec2:DescribeVpcs",
-        "ec2:DescribeInstanceTypeOfferings",
-        "ec2:DescribeInstances",
-        "ec2:DescribeInstanceTypes",
-        "ec2:DescribeInstanceAttribute",
-        "ec2:DescribeInstanceStatus",
-        "ec2:GetEbsEncryptionByDefault",
-        "ec2:DescribeImages"
+        "iam:AddRoleToInstanceProfile",
+        "iam:AttachRolePolicy",
+        "iam:CreateInstanceProfile",
+        "iam:CreateRole",
+        "iam:DeleteInstanceProfile",
+        "iam:DeleteRole",
+        "iam:DeleteRolePolicy",
+        "iam:DetachRolePolicy",
+        "iam:GetRole",
+        "iam:ListAttachedRolePolicies",
+        "iam:ListRolePolicies",
+        "iam:PutRolePolicy",
+        "iam:RemoveRoleFromInstanceProfile",
+        "iam:TagInstanceProfile",
+        "iam:TagRole"
       ],
       "Resource": "*"
     },
+    {
+      "Sid": "PassOnlyTowerForgeRolesToBatch",
+      "Effect": "Allow",
+      "Action": "iam:PassRole",
+      "Resource": "*",
+      "Condition": {
+        "StringEquals": {
+          "iam:PassedToService": "batch.amazonaws.com"
+        }
+      }
+    },
+    // Are these even needed?
+    // {
+    //   "Sid": "EC2MetadataDescribe",
+    //   "Effect": "Allow",
+    //   "Action": [
+    //     "ec2:DescribeAccountAttributes",
+    //     "ec2:DescribeImages",
+    //     "ec2:DescribeInstanceAttribute",
+    //     "ec2:DescribeInstances",
+    //     "ec2:DescribeInstanceStatus",
+    //     "ec2:DescribeInstanceTypeOfferings",
+    //     "ec2:DescribeInstanceTypes",
+    //     "ec2:DescribeKeyPairs",
+    //     "ec2:DescribeSecurityGroups",
+    //     "ec2:DescribeSubnets",
+    //     "ec2:DescribeVpcs",
+    //     "ec2:GetEbsEncryptionByDefault"
+    //   ],
+    //   "Resource": "*"
+    // },
     {
       "Sid": "ECSDescribe",
       "Effect": "Allow",
@@ -129,12 +124,12 @@
       "Effect": "Allow",
       "Action": [
         "logs:Describe*",
+        "logs:FilterLogEvents",
         "logs:Get*",
         "logs:List*",
         "logs:StartQuery",
         "logs:StopQuery",
-        "logs:TestMetricFilter",
-        "logs:FilterLogEvents"
+        "logs:TestMetricFilter"
       ],
       "Resource": "*"
     },
@@ -150,11 +145,7 @@
         "elasticfilesystem:DescribeMountTargets",
         "elasticfilesystem:UpdateFileSystem",
         "elasticfilesystem:PutLifecycleConfiguration",
-        "elasticfilesystem:TagResource",
-        "fsx:CreateFileSystem",
-        "fsx:DeleteFileSystem",
-        "fsx:DescribeFileSystems",
-        "fsx:TagResource"
+        "elasticfilesystem:TagResource"
       ],
       "Resource": "*"
     },
@@ -168,6 +159,24 @@
         "fsx:TagResource"
       ],
       "Resource": "*"
+    },
+    {
+      "Sid": "OptionalPipelineSecretsListing",
+      "Effect": "Allow",
+      "Action": [
+        "secretsmanager:ListSecrets"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "OptionalPipelineSecretsManagementCanBeRestricted",
+      "Effect": "Allow",
+      "Action": [
+        "secretsmanager:DescribeSecret",
+        "secretsmanager:DeleteSecret",
+        "secretsmanager:CreateSecret"
+      ],
+      "Resource": "arn:aws:secretsmanager:*:*:secret:tower-*"
     },
     {
       "Sid": "OptionalAllowNextFlowToSendEmails",

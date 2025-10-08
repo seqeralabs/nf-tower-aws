@@ -10,7 +10,7 @@ AWS Batch compute environments and queues. Instructions are available in the [Se
 documentation](https://docs.seqera.io/platform-cloud/compute-envs/aws-batch#manual) to manually set
 up all required resources for a pipeline to complete successfully.
 
-The policies in the [`forge/`](../forge/) directory are needed if you want to let Seqera Platform
+The policies in the [`forge/`](../forge/) directory are needed if you want to let Seqera
 automatically create and manage AWS Batch compute environments and queues for you, using the Batch
 Forge feature. Instructions are available in the [Seqera
 documentation](https://docs.seqera.io/platform-cloud/compute-envs/aws-batch#batch-forge) to
