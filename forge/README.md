@@ -1,44 +1,40 @@
-# Seqera Batch Forge for AWS Batch
+# Seqera Forge IAM Policy for AWS
 
-Seqera Platform can automate the configuration of [AWS Batch](https://aws.amazon.com/batch/) compute
-environments and job queues for Nextflow pipelines using Batch Forge. As described in
-the [introduction](../README.md), Forge will take care of creating AWS IAM Roles for each compute
-environment, so the policies described in the [`launch/`](../launch) section are **not needed**.
-
-To enable Batch Forge, the IAM user you configure in your Seqera Platform workspace requires the
-permissions listed in the [`forge-policy.json`](forge-policy.json) file. Full instructions are
-available in the [Seqera
+This directory contains the IAM policy required to use **Seqera Forge** with AWS. Seqera
+Forge automates the creation and management of [AWS Batch](https://aws.amazon.com/batch/) compute
+environments, simplifying your pipeline deployments. Instructions are available in the [Seqera
 documentation](https://docs.seqera.io/platform-cloud/compute-envs/aws-batch#batch-forge) to
 configure a IAM User for Batch Forge.
 
+**If you are using Seqera Forge, you do not need the policies from the `launch/`
+directory.**
+
+## The `forge-policy.json` File
+
+The [`forge-policy.json`](./forge-policy.json) file contains the necessary permissions for
+Seqera Forge to operate. This policy is designed to be a general-purpose solution, but you
+should review and customize it to meet your organization's security standards.
+
 > [!WARNING]
-> The generic [`forge-policy.json`](forge-policy.json) IAM policy is intended for use with Seqera
-> Forge only, and uses wide permissions to support common deployment scenarios.
-> However, we recognize that it may not be appropriate for all environments or security
-> requirements. You should carefully review and tailor the generic policy to fit your organization's
-> security standards and operational needs, as described in this document.
+> The default `forge-policy.json` grants broad permissions. We strongly recommend that you
+> scope down these permissions to match your specific needs, as described in this document.
 
-## Restricting Forge Permissions
+## How to Restrict Permissions
 
-This Readme file explains how you can scope down the policy using:
+The `forge-policy.json` file is divided into several statements, each with a clear purpose. You can
+restrict the permissions in each statement using resource-level restrictions, condition keys, and
+resource tagging.
 
-1. Resource-level restrictions
-2. AWS condition keys
-3. Resource tagging
-
-> [!NOTE]
-> If you've configured a custom prefix for Compute Environments and IAM roles in your Seqera
-> Platform Enterprise installation, remember to update `TowerForge-*` with the resource pattern
-> you're using.
+Below are examples of how to tighten the permissions for each section of the policy.
 
 ### Batch Execution
 
-Seqera Platform requires the ability to trigger workflows using AWS Batch when using it as a compute
-environment. You can restrict the `batch` actions to specific resources by replacing the `"Resource":
-"*"` line with the ARN of your Batch job queues and compute environments, potentially using wildcards
-to match multiple resources. You can also restrict permissions based on Resource tag (these need to
-be [set by users when setting up a pipeline in
-Platform](https://docs.seqera.io/platform-enterprise/resource-labels/overview)). For example:
+This section of the policy allows Seqera to manage Batch compute environments and jobs. You can
+restrict these permissions to specific resources. e.g. by limiting to Job Queues and Compute
+Environments starting with `TowerForge`, the [default JQ/CE prefix used by
+Forge](https://docs.seqera.io/platform-enterprise/enterprise/configuration/overview#compute-environments).
+You can also restrict permissions based on Resource tag (these need to be [set by users when setting
+up a pipeline in Platform](https://docs.seqera.io/platform-enterprise/resource-labels/overview)).
 
 ```json
 {
@@ -112,10 +108,10 @@ for pipeline execution.
 
 ### IAM Role Configuration
 
-Seqera Platform Batch Forge by default creates and manages the lifecycle of IAM Roles & Policies
-used by Nextflow pipelines in Compute Environments. During Compute Environment creation, you can
-optionally define pre-provisioned roles for your Compute Environment, Head Job, and Instance
-profile, eliminating the need for these permissions.
+Seqera Forge can create and manage the IAM roles needed for your pipelines. If you want to
+restrict this, you can limit the role creation to a specific path or prefix. During Compute
+Environment creation, you can optionally define pre-provisioned roles for your Compute Environment,
+Head Job, and Instance profile, eliminating the need for these permissions.
 
 If you want to allow Forge to manage IAM roles but restrict the resources it can create to only
 specific, you can use the following policy:
@@ -146,14 +142,15 @@ specific, you can use the following policy:
 ```
 
 > [!NOTE]
-> Adapt the resource definition if you configured your Seqera installation to create IAM roles with
-> a different prefix than the default `TowerForge-*`.
+> If you have a [custom
+> prefix](https://docs.seqera.io/platform-enterprise/enterprise/configuration/overview#compute-environments)
+> for your Seqera resources, replace `TowerForge-*` with your custom prefix.
 
-### PassRole
+### Pass Role to Batch
 
-Seqera requires the ability to `PassRole` to AWS Batch when using compute environments.
-Permissions can be restricted to only allow passing the roles created by Seqera Forge with the
-default prefix `TowerForge-*` to the AWS Batch service:
+The `iam:PassRole` permission allows Seqera to pass IAM roles to AWS Batch. Permissions can be
+restricted to only allow passing the roles created by Seqera Forge with the default prefix
+`TowerForge-*` to the AWS Batch service:
 
 ```json
 {
@@ -169,7 +166,7 @@ default prefix `TowerForge-*` to the AWS Batch service:
 }
 ```
 
-### S3 Data Access
+### S3 Access
 
 Seqera Platform can list S3 buckets for
 [Studios](https://docs.seqera.io/platform-cloud/studios/overview), [Data

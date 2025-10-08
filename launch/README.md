@@ -1,40 +1,37 @@
-# Launch-only required permissions
+# Seqera Launch Policy for AWS
 
-The policies in this directory are intended for use with Seqera Platform to allow IAM users to
-launch pipelines with AWS Batch resources created manually. In certain environments, you may want or
-you may be required to manually create and manage your [AWS Batch](https://aws.amazon.com/batch/)
-resources.
+This directory contains the IAM policy for using Seqera Platform with **manually managed AWS
+Batch resources**. This setup is for users who want to create and manage their own [AWS
+Batch](https://aws.amazon.com/batch/) compute environments and queues.
 Refer to the [Seqera
 documentation](https://docs.seqera.io/platform-cloud/compute-envs/aws-batch#manual) for detailed
 steps on how to manually configure your Batch environment.
 
-As described in the [main README](../README.md), Seqera Platform can automate the AWS Batch
-configuration steps through the use of [Batch Forge](../forge/).
+**If you want to use Seqera Forge to automatically manage your AWS resources, you do not need
+this policy.** See the [`forge/`](../forge) directory for the correct policy.
 
-> [!NOTE]
-> Manual AWS Batch configuration is only necessary if you don't use Batch Forge.
-Batch Forge automatically creates the AWS Batch queues required for your workflow executions.
+## The `launch-policy.json` File
 
-> The policies in this section are **not needed** if you are using Batch Forge, as Forge will
-> automatically create IAM Roles specifically for each Batch Compute Environment it creates and
-> those roles will then be used to manage the resources within that environment. See the [Forge
-> README](../forge/) for more information.
+The [`launch-policy.json`](./launch-policy.json) file contains the permissions that Seqera
+Platform needs to launch pipelines using your existing AWS Batch infrastructure. As with the `forge`
+policy, you should review and customize this policy to fit your security requirements.
 
-## Restricting Launch Permissions
+> [!WARNING]
+> The default `launch-policy.json` grants broad permissions. We strongly recommend that you scope
+> down these permissions to match your specific needs, as described in this document.
 
-The [launch policy](launch-policy.json) is the policy required by Seqera Platform to launch
-pipelines using AWS Batch resources created manually. This policy must be attached to the IAM user
-you specify in the credentials of your Seqera workspace.
-The policy is divided into different statements to allow you to scope down the permissions.
+## How to Restrict Permissions
+
+The `launch-policy.json` is structured to allow you to easily scope down permissions. Here
+are some examples of how to do so.
 
 ### Batch Execution
 
-Seqera Platform requires the ability to trigger workflows using AWS Batch when using it as a compute
-environment. You can restrict the `batch` actions to specific resources by replacing the `"Resource":
-"*"` line with the ARN of your Batch job queues and compute environments, potentially using wildcards
-to match multiple resources. You can also restrict permissions based on Resource tag (these need to
-be [set by users when setting up a pipeline in
-Platform](https://docs.seqera.io/platform-enterprise/resource-labels/overview)). For example:
+This section of the policy allows Seqera to manage Batch compute environments and jobs. You can
+restrict these permissions to specific resources. e.g. by limiting to Job Queues and Compute
+Environments. You can also restrict permissions based on Resource tag (these need to be [set by
+users when setting up a pipeline in
+Platform](https://docs.seqera.io/platform-enterprise/resource-labels/overview)).
 
 ```json
 {
@@ -90,7 +87,7 @@ Platform](https://docs.seqera.io/platform-enterprise/resource-labels/overview)).
 > each Seqera pipeline when configuring it in the Platform UI. Forgetting to set the tag will cause
 > the pipeline to fail to run.
 
-### S3 Data Access
+### S3 Access
 
 Seqera Platform can list S3 buckets for
 [Studios](https://docs.seqera.io/platform-cloud/studios/overview), [Data
@@ -123,12 +120,12 @@ data retrieval to specific buckets.
 }
 ```
 
-### PassRole
+### Pass Role to Batch
 
-Seqera requires the ability to `PassRole` to AWS Batch when using compute environments.
-Permissions can be restricted to only allow passing the [execution IAM
+The `iam:PassRole` permission allows Seqera to pass [execution IAM
 roles](https://docs.aws.amazon.com/batch/latest/userguide/execution-IAM-role.html#create-execution-role)
-you created manually to the AWS Batch service:
+to AWS Batch. Permissions can be restricted to only allow passing specific roles to the AWS Batch
+service:
 
 ```json
 {

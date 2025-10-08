@@ -1,21 +1,21 @@
-# AWS IAM policies for Seqera Platform
+# AWS IAM Policies for Seqera Platform
 
-This repo contains the policies that need to be set on AWS IAM Users to allow Seqera Platform to
-operate properly with AWS.
+This repository provides AWS Identity and Access Management (IAM) policies for using the
+Seqera Platform with AWS.
 
-## Difference between `launch` and `forge` policies
+## Choose Your Setup:
 
-The policies in the [`launch/`](../launch/) directory are needed if you manually create and manage
-AWS Batch compute environments and queues. Instructions are available in the [Seqera
-documentation](https://docs.seqera.io/platform-cloud/compute-envs/aws-batch#manual) to manually set
-up all required resources for a pipeline to complete successfully.
+There are two ways to configure Seqera Platform with AWS:
 
-The policies in the [`forge/`](../forge/) directory are needed if you want to let Seqera
-automatically create and manage AWS Batch compute environments and queues for you, using the Batch
-Forge feature. Instructions are available in the [Seqera
-documentation](https://docs.seqera.io/platform-cloud/compute-envs/aws-batch#batch-forge) to
-configure a IAM User for Batch Forge.
-When letting Batch Forge handle the AWS Batch resources, you do not need the policies in the
-`launch/` directory, as Forge will automatically create IAM Roles specifically for each Batch
-Compute Environment it creates and those roles will then be used to manage the resources within
-that environment.
+* **Seqera Forge (Recommended):** Let Seqera automatically create and manage the AWS Batch
+  infrastructure for you. This is the simplest way to get started.
+  * **Use the policies in the [`forge/`](./forge) directory.**
+* **Manual Setup:** Manually create and manage your own AWS Batch compute environments and
+  queues. This gives you more control over the underlying infrastructure.
+  * **Use the policies in the [`launch/`](./launch) directory.**
+
+In short: if you are new to Seqera Platform or prefer a simpler setup, use the `forge`
+policy. If you have existing AWS Batch infrastructure or specific security requirements, the
+`launch` policy might be a better fit.
+
+For more details on each setup, see the `README.md` files in the respective directories.
