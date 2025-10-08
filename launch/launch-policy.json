@@ -18,21 +18,20 @@
       ],
       "Resource": "*"
     },
-    // Are these needed?
-    // {
-    //   "Sid": "ReadOnlyEC2AndECS",
-    //   "Effect": "Allow",
-    //   "Action": [
-    //     "ec2:DescribeImages",
-    //     "ec2:DescribeInstanceAttribute",
-    //     "ec2:DescribeInstances",
-    //     "ec2:DescribeInstanceStatus",
-    //     "ec2:DescribeInstanceTypes",
-    //     "ecs:DescribeContainerInstances",
-    //     "ecs:DescribeTasks"
-    //   ],
-    //   "Resource": "*"
-    // },
+    {
+      "Sid": "ReadOnlyEC2AndECS",
+      "Effect": "Allow",
+      "Action": [
+        "ec2:DescribeImages",
+        "ec2:DescribeInstanceAttribute",
+        "ec2:DescribeInstances",
+        "ec2:DescribeInstanceStatus",
+        "ec2:DescribeInstanceTypes",
+        "ecs:DescribeContainerInstances",
+        "ecs:DescribeTasks"
+      ],
+      "Resource": "*"
+    },
     {
       "Sid": "S3PlatformDataAccessCanBeRestricted",
       "Effect": "Allow",
