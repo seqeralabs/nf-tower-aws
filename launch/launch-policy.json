@@ -1,38 +1,93 @@
 {
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Sid": "PlatformLaunch",
-            "Effect": "Allow",
-            "Action": [
-                "batch:DescribeJobQueues",
-                "batch:CancelJob",
-                "batch:SubmitJob",
-                "batch:ListJobs",
-                "batch:TagResource",
-                "batch:DescribeComputeEnvironments",
-                "batch:TerminateJob",
-                "batch:DescribeJobs",
-                "batch:RegisterJobDefinition",
-                "batch:DescribeJobDefinitions",
-                "ecs:DescribeTasks",
-                "ecs:DescribeContainerInstances",
-                "ec2:DescribeInstances",
-                "ec2:DescribeInstanceTypes",
-                "ec2:DescribeInstanceAttribute",
-                "ec2:DescribeInstanceStatus",
-                "ec2:DescribeImages",
-                "logs:Describe*",
-                "logs:Get*",
-                "logs:List*",
-                "logs:StartQuery",
-                "logs:StopQuery",
-                "logs:TestMetricFilter",
-                "logs:FilterLogEvents",
-                "ses:SendRawEmail",
-                "secretsmanager:ListSecrets"
-            ],
-            "Resource": "*"
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "SubmitJobsToBatchAndMonitor",
+      "Effect": "Allow",
+      "Action": [
+        "batch:CancelJob",
+        "batch:DescribeComputeEnvironments",
+        "batch:DescribeJobDefinitions",
+        "batch:DescribeJobQueues",
+        "batch:DescribeJobs",
+        "batch:ListJobs",
+        "batch:RegisterJobDefinition",
+        "batch:SubmitJob",
+        "batch:TagResource",
+        "batch:TerminateJob"
+      ],
+      "Resource": "*"
+    },
+    // Are these needed?
+    // {
+    //   "Sid": "ReadOnlyEC2AndECS",
+    //   "Effect": "Allow",
+    //   "Action": [
+    //     "ec2:DescribeImages",
+    //     "ec2:DescribeInstanceAttribute",
+    //     "ec2:DescribeInstances",
+    //     "ec2:DescribeInstanceStatus",
+    //     "ec2:DescribeInstanceTypes",
+    //     "ecs:DescribeContainerInstances",
+    //     "ecs:DescribeTasks"
+    //   ],
+    //   "Resource": "*"
+    // },
+    {
+      "Sid": "S3PlatformDataAccess",
+      "Effect": "Allow",
+      "Action": [
+        "s3:Get*",
+        "s3:List*"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "PassRolesToBatch",
+      "Effect": "Allow",
+      "Action": "iam:PassRole",
+      "Resource": "*",
+      "Condition": {
+        "StringEquals": {
+          "iam:PassedToService": "batch.amazonaws.com"
         }
-    ]
+      }
+    },
+    {
+      "Sid": "CloudWatchLogsAccess",
+      "Effect": "Allow",
+      "Action": [
+        "logs:Describe*",
+        "logs:FilterLogEvents",
+        "logs:Get*",
+        "logs:List*",
+        "logs:StartQuery",
+        "logs:StopQuery",
+        "logs:TestMetricFilter"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "OptionalPipelineSecretsListing",
+      "Effect": "Allow",
+      "Action": "secretsmanager:ListSecrets",
+      "Resource": "*"
+    },
+    {
+      "Sid": "OptionalPipelineSecretsManagementCanBeRestricted",
+      "Effect": "Allow",
+      "Action": [
+        "secretsmanager:DescribeSecret",
+        "secretsmanager:DeleteSecret",
+        "secretsmanager:CreateSecret"
+      ],
+      "Resource": "arn:aws:secretsmanager:*:*:secret:tower-*"
+    },
+    {
+      "Sid": "AllowEmailSendingFromSeqeraPlatform",
+      "Effect": "Allow",
+      "Action": "ses:SendRawEmail",
+      "Resource": "*"
+    }
+  ]
 }

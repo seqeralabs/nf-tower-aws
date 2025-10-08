@@ -18,7 +18,7 @@ configure a IAM User for Batch Forge.
 > requirements. You should carefully review and tailor the generic policy to fit your organization's
 > security standards and operational needs, as described in this document.
 
-## Restricting Permissions
+## Restricting Forge Permissions
 
 This Readme file explains how you can scope down the policy using:
 
@@ -34,10 +34,11 @@ This Readme file explains how you can scope down the policy using:
 ### Batch Execution
 
 Seqera Platform requires the ability to trigger workflows using AWS Batch when using it as a compute
-environment.
-You can restrict these permissions based on ARN or Resource tag (these need to be [set by users when
-setting up a pipeline in
-Platform](https://docs.seqera.io/platform-enterprise/resource-labels/overview)), like the following:
+environment. You can restrict the `batch` actions to specific resources by replacing the `"Resource":
+"*"` line with the ARN of your Batch job queues and compute environments, potentially using wildcards
+to match multiple resources. You can also restrict permissions based on Resource tag (these need to
+be [set by users when setting up a pipeline in
+Platform](https://docs.seqera.io/platform-enterprise/resource-labels/overview)). For example:
 
 ```json
 {
@@ -150,10 +151,9 @@ specific, you can use the following policy:
 
 ### PassRole
 
-Seqera Batch Forge requires the ability to pass IAM roles to AWS services. The PassRole permission
-allows Forge to assign roles to AWS Batch services when creating compute environments.
-You can restrict these permissions to only allow passing roles with the appropriate prefix to the
-AWS Batch service, which by default is `TowerForge-*`:
+Seqera requires the ability to `PassRole` to AWS Batch when using compute environments.
+Permissions can be restricted to only allow passing the roles created by Seqera Forge with the
+default prefix `TowerForge-*` to the AWS Batch service:
 
 ```json
 {
@@ -183,7 +183,7 @@ data retrieval to specific buckets.
 {
   "Sid": "S3ListBuckets",
   "Effect": "Allow",
-  "Action": ["s3:ListAllMyBuckets"],
+  "Action": "s3:ListAllMyBuckets",
   "Resource": "*"
 },
 {
@@ -269,8 +269,9 @@ Allow Forge to manage [AWS EFS file systems](https://aws.amazon.com/efs/), if ne
 ### SES Policy (optional)
 
 NextFlow is capable of sending email reports from your Nextflow pipeline (such as MultiQC reports)
-via Amazon SES (Simple Email Service). You can delete this statement if you don't want to use this
-feature, or you can restrict these permissions to a specific sender and recipient addresses:
+via Amazon SES (Simple Email Service). The resource must be a wildcard to allow Platform to send
+emails to any recipient. You can delete this statement if you don't want to use this feature, or you
+can restrict these permissions to a specific sender and recipient addresses:
 
 ```json
 {

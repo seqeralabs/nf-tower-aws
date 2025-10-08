@@ -71,7 +71,7 @@
       "Resource": "*"
     },
     {
-      "Sid": "PassOnlyTowerForgeRolesToBatch",
+      "Sid": "PassRolesToBatch",
       "Effect": "Allow",
       "Action": "iam:PassRole",
       "Resource": "*",
@@ -163,9 +163,7 @@
     {
       "Sid": "OptionalPipelineSecretsListing",
       "Effect": "Allow",
-      "Action": [
-        "secretsmanager:ListSecrets"
-      ],
+      "Action": "secretsmanager:ListSecrets",
       "Resource": "*"
     },
     {
