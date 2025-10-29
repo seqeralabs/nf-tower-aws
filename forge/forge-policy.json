@@ -85,15 +85,6 @@
       }
     },
     {
-      "Sid": "ECSDescribe",
-      "Effect": "Allow",
-      "Action": [
-        "ecs:DescribeTasks",
-        "ecs:DescribeContainerInstances"
-      ],
-      "Resource": "*"
-    },
-    {
       "Sid": "S3PlatformDataAccessCanBeRestricted",
       "Effect": "Allow",
       "Action": [
