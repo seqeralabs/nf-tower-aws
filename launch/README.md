@@ -124,8 +124,8 @@ data retrieval to specific buckets.
 
 The `iam:PassRole` permission allows Seqera to pass [execution IAM
 roles](https://docs.aws.amazon.com/batch/latest/userguide/execution-IAM-role.html#create-execution-role)
-to AWS Batch. Permissions can be restricted to only allow passing specific roles to the AWS Batch
-service:
+to AWS Batch. Permissions can be restricted to only allow passing specific roles you create to the
+AWS Batch and EC2 services:
 
 ```json
 {
@@ -135,7 +135,10 @@ service:
   "Resource": "arn:aws:iam::<ACCOUNT_ID>:role/MyExecutionRole",
   "Condition": {
     "StringEquals": {
-      "iam:PassedToService": "batch.amazonaws.com"
+      "iam:PassedToService": [
+        "batch.amazonaws.com",
+        "ec2.amazonaws.com"
+      ]
     }
   }
 }

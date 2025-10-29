@@ -150,7 +150,7 @@ specific, you can use the following policy:
 
 The `iam:PassRole` permission allows Seqera to pass IAM roles to AWS Batch. Permissions can be
 restricted to only allow passing the roles created by Seqera Forge with the default prefix
-`TowerForge-*` to the AWS Batch service:
+`TowerForge-*` to the AWS Batch and EC2 services:
 
 ```json
 {
@@ -160,7 +160,10 @@ restricted to only allow passing the roles created by Seqera Forge with the defa
   "Resource": "arn:aws:iam::<ACCOUNT_ID>:role/TowerForge-*",
   "Condition": {
     "StringEquals": {
-      "iam:PassedToService": "batch.amazonaws.com"
+      "iam:PassedToService": [
+        "batch.amazonaws.com",
+        "ec2.amazonaws.com"
+      ]
     }
   }
 }

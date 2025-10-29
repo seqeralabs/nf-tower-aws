@@ -48,7 +48,10 @@
       "Resource": "*",
       "Condition": {
         "StringEquals": {
-          "iam:PassedToService": "batch.amazonaws.com"
+          "iam:PassedToService": [
+            "batch.amazonaws.com",
+            "ec2.amazonaws.com"
+          ]
         }
       }
     },
