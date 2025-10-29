@@ -246,7 +246,7 @@ To successfully use pipeline secrets, you must also:
    }
    ```
 
-### SES Policy (optional)
+### SES Policy for Email Delivery (optional)
 
 NextFlow is capable of sending email reports from your Nextflow pipeline (such as MultiQC reports)
 via Amazon SES (Simple Email Service). The resource must be a wildcard to allow Platform to send

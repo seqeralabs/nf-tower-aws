@@ -274,7 +274,7 @@ Allow Forge to manage [AWS EFS file systems](https://aws.amazon.com/efs/), if ne
 }
 ```
 
-### SES Policy (optional)
+### SES Policy for Email Delivery (optional)
 
 NextFlow is capable of sending email reports from your Nextflow pipeline (such as MultiQC reports)
 via Amazon SES (Simple Email Service). The resource must be a wildcard to allow Platform to send
