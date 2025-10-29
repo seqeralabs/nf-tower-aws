@@ -269,11 +269,3 @@ can restrict these permissions to a specific sender and recipient addresses:
   }
 }
 ```
-
-## Seqera role trust policy (optional)
-
-You can optionally create a Seqera role trust policy to allow EC2 instances or EKS clusters (depending on your Seqera deployment) to assume the Seqera IAM role.
-
-1. Download the [Seqera role trust policy](seqera-role-trust-policy.json).
-1. Replace `<ACCOUNT_ID>` with your AWS account ID.
-1. Replace `<USER_NAME>` and/or `<ROLE_NAME>` with the users and or roles that must be able to assume the Seqera IAM role.
