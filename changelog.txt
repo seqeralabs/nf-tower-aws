@@ -1,11 +1,11 @@
 # changelog
 
-## v1.2.0 - 05 Oct 2025
+## v1.2.0 - 29 Oct 2025
 - Split Forge and launch policy into multiple statements for better clarity
 - Improve documentation around IAM permissions, resource scoping and explain launch/forge
-  differences
+  differences in main README
 - Delete scattered launch policy files, consolidate into single launch-policy.json, explaining when
-  to use each
+  to use each part of the policy in the README
 
 ## v1.1.0 - 5 Oct 2022
 - Add permissions required by Resource Labels / Tags feature
