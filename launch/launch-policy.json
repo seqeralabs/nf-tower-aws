@@ -23,9 +23,6 @@
       "Effect": "Allow",
       "Action": [
         "ec2:DescribeImages",
-        "ec2:DescribeInstanceAttribute",
-        "ec2:DescribeInstances",
-        "ec2:DescribeInstanceStatus",
         "ec2:DescribeInstanceTypes",
         "ecs:DescribeContainerInstances",
         "ecs:DescribeTasks"

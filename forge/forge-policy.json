@@ -90,16 +90,12 @@
       "Action": [
         "ec2:DescribeAccountAttributes",
         "ec2:DescribeImages",
-        "ec2:DescribeInstanceAttribute",
-        "ec2:DescribeInstances",
-        "ec2:DescribeInstanceStatus",
         "ec2:DescribeInstanceTypeOfferings",
         "ec2:DescribeInstanceTypes",
         "ec2:DescribeKeyPairs",
         "ec2:DescribeSecurityGroups",
         "ec2:DescribeSubnets",
-        "ec2:DescribeVpcs",
-        "ec2:GetEbsEncryptionByDefault"
+        "ec2:DescribeVpcs"
       ],
       "Resource": "*"
     },
