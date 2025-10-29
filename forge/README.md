@@ -96,9 +96,7 @@ Seqera Platform requires the ability to create and manage EC2 launch templates u
 
 > [!NOTE]
 > AWS does not support restricting IAM permissions on EC2 launch templates based on specific
-> resource names or tags. Because of this limitation, it is not currently possible to scope IAM
-> permissions to specific launch templates. As a result, permission to operate on any resource `*`
-> must be granted.
+> resource names or tags. As a result, permission to operate on any resource `*` must be granted.
 
 ### AWS Systems Manager (SSM)
 
@@ -230,8 +228,12 @@ compute environment:
 Platform uses EC2 describe permissions to retrieve information about existing AWS resources in your
 account, including VPCs, subnets, and security groups. This data is used to populate dropdown menus
 in the Platform UI when creating new Compute Environments. While these permissions are optional,
-they are recommended to enhance the user experience. Without them, you would need to manually enter
-resource IDs in the interface.
+they are recommended to enhance the user experience. Without these permissions, resource IDs would
+need to be manually entered in the interface.
+
+> [!NOTE]
+> AWS does not support restricting IAM permissions on EC2 Describe actions based on specific
+> resource names or tags. As a result, permission to operate on any resource `*` must be granted.
 
 ### FSx File Systems (optional)
 
