@@ -123,6 +123,17 @@
       "Resource": "*"
     },
     {
+      "Sid": "OptionalFSXManagementCanBeRestricted",
+      "Effect": "Allow",
+      "Action": [
+        "fsx:CreateFileSystem",
+        "fsx:DeleteFileSystem",
+        "fsx:DescribeFileSystems",
+        "fsx:TagResource"
+      ],
+      "Resource": "*"
+    },
+    {
       "Sid": "OptionalEFSManagementCanBeRestricted",
       "Effect": "Allow",
       "Action": [
@@ -135,17 +146,6 @@
         "elasticfilesystem:UpdateFileSystem",
         "elasticfilesystem:PutLifecycleConfiguration",
         "elasticfilesystem:TagResource"
-      ],
-      "Resource": "*"
-    },
-    {
-      "Sid": "OptionalFSXManagementCanBeRestricted",
-      "Effect": "Allow",
-      "Action": [
-        "fsx:CreateFileSystem",
-        "fsx:DeleteFileSystem",
-        "fsx:DescribeFileSystems",
-        "fsx:TagResource"
       ],
       "Resource": "*"
     },
