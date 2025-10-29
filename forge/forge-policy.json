@@ -85,21 +85,6 @@
       }
     },
     {
-      "Sid": "EC2MetadataDescribe",
-      "Effect": "Allow",
-      "Action": [
-        "ec2:DescribeAccountAttributes",
-        "ec2:DescribeImages",
-        "ec2:DescribeInstanceTypeOfferings",
-        "ec2:DescribeInstanceTypes",
-        "ec2:DescribeKeyPairs",
-        "ec2:DescribeSecurityGroups",
-        "ec2:DescribeSubnets",
-        "ec2:DescribeVpcs"
-      ],
-      "Resource": "*"
-    },
-    {
       "Sid": "ECSDescribe",
       "Effect": "Allow",
       "Action": [
@@ -128,6 +113,21 @@
         "logs:StartQuery",
         "logs:StopQuery",
         "logs:TestMetricFilter"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "OptionalEC2MetadataDescribe",
+      "Effect": "Allow",
+      "Action": [
+        "ec2:DescribeAccountAttributes",
+        "ec2:DescribeImages",
+        "ec2:DescribeInstanceTypeOfferings",
+        "ec2:DescribeInstanceTypes",
+        "ec2:DescribeKeyPairs",
+        "ec2:DescribeSecurityGroups",
+        "ec2:DescribeSubnets",
+        "ec2:DescribeVpcs"
       ],
       "Resource": "*"
     },

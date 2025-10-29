@@ -225,6 +225,14 @@ compute environment:
 }
 ```
 
+### EC2 Describe Permissions (optional)
+
+Platform uses EC2 describe permissions to retrieve information about existing AWS resources in your
+account, including VPCs, subnets, and security groups. This data is used to populate dropdown menus
+in the Platform UI when creating new Compute Environments. While these permissions are optional,
+they are recommended to enhance the user experience. Without them, you would need to manually enter
+resource IDs in the interface.
+
 ### FSx File Systems (optional)
 
 Allow Forge to manage [AWS FSx file systems](https://aws.amazon.com/fsx/), if needed by the pipelines.
