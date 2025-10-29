@@ -90,7 +90,7 @@ up a pipeline in Platform](https://docs.seqera.io/platform-enterprise/resource-l
 > each Seqera pipeline when configuring it in the Platform UI. Forgetting to set the tag will cause
 > the pipeline to fail to run.
 
-### Launch Template Management.
+### Launch Template Management
 
 Seqera Platform requires the ability to create and manage EC2 launch templates using optimized AMIs identified via AWS Systems Manager (SSM).
 
@@ -176,7 +176,7 @@ Seqera Platform can list S3 buckets for
 Explorer](https://docs.seqera.io/platform-cloud/data/data-explorer) and to help identify the
 Nextflow working directory.
 
-The policy can be scoped down to only allow listing the buckets in the account along with limiting
+The policy can be scoped down to only allow listing the buckets in the account, along with limiting
 data retrieval to specific buckets.
 
 ```json

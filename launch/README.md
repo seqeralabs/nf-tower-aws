@@ -94,7 +94,7 @@ Seqera Platform can list S3 buckets for
 Explorer](https://docs.seqera.io/platform-cloud/data/data-explorer) and to help identify the
 Nextflow working directory.
 
-The policy can be scoped down to only allow listing the buckets in the account along with limiting
+The policy can be scoped down to only allow listing the buckets in the account, along with limiting
 data retrieval to specific buckets.
 
 ```json
