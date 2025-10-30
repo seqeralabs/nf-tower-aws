@@ -164,12 +164,6 @@
         "secretsmanager:CreateSecret"
       ],
       "Resource": "arn:aws:secretsmanager:*:*:secret:tower-*"
-    },
-    {
-      "Sid": "OptionalAllowSeqeraPlatformToSendEmailsCanBeRestricted",
-      "Effect": "Allow",
-      "Action": "ses:SendRawEmail",
-      "Resource": "*"
     }
   ]
 }

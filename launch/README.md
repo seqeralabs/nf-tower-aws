@@ -247,27 +247,3 @@ To successfully use pipeline secrets, you must also:
      ]
    }
    ```
-
-### SES Policy for Email Delivery (optional)
-
-NextFlow is capable of sending email reports from your Nextflow pipeline (such as MultiQC reports)
-via Amazon SES (Simple Email Service). The resource must be a wildcard to allow Platform to send
-emails to any recipient. You can delete this statement if you don't want to use this feature, or you
-can restrict these permissions to a specific sender and recipient addresses:
-
-```json
-{
-  "Sid": "AllowEmailSendingFromSeqeraPlatform",
-  "Effect": "Allow",
-  "Action": "ses:SendRawEmail",
-  "Resource": "*",
-  "Condition": {
-    "StringEquals": {
-      "ses:FromAddress": "seqera-platform-installation@example.com"
-    },
-    "ForAllValues:StringLike": {
-      "ses:Recipients": ["*@example.com"]
-    }
-  }
-}
-```
