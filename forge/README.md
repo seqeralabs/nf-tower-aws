@@ -181,14 +181,17 @@ data retrieval to specific buckets.
 }
 ```
 
-### IAM Role Configuration (optional)
+### IAM Roles Creation (optional)
 
-Seqera Forge can create and manage the IAM roles needed for your pipelines. During Compute
-Environment creation, you can optionally define pre-provisioned roles for your Compute Environment,
-Head Job, and Instance profile, eliminating the need for these permissions.
+Seqera Forge can optionally create and manage the IAM roles needed for your pipelines: during
+Compute Environment creation, you can optionally define pre-provisioned roles for your Compute
+Environment, Head Job, and Instance profile, eliminating the need for these permissions.
+Refer to the [Seqera
+documentation](https://docs.seqera.io/platform-cloud/enterprise/advanced-topics/manual-aws-batch-setup)
+for more details on how to manually setup IAM roles.
 
 If you want to allow Forge to create IAM roles but restrict the resources it can create to specific
-paths and prefixes, the following policy can be used:
+paths and prefixes, an account ID and a role prefix can be set in the `Resource` component:
 
 ```json
 {
