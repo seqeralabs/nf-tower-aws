@@ -148,15 +148,16 @@ compute environment:
 
 ### S3 Access (optional)
 
-Seqera Platform can list S3 buckets for
-[Studios](https://docs.seqera.io/platform-cloud/studios/overview), [Data
-Explorer](https://docs.seqera.io/platform-cloud/data/data-explorer) and to help choose the
-Nextflow working directory, but all these features are optional. S3 access improves the user
-experience by automatically providing a list of S3 buckets to pick from for the Nextflow working
-directory instead of having to type it manually.
+Seqera Platform offers several products to manipulate data on AWS S3 buckets via its UI, like
+[Studios](https://docs.seqera.io/platform-cloud/studios/overview) and [Data
+Explorer](https://docs.seqera.io/platform-cloud/data/data-explorer). To improve the user experience,
+Platform automatically fetches the list of buckets the user has access to, and
+provides the list in a dropdown menu to be used as Nextflow working directory.
+The Studios and Data Explorer features are optional, and users can type the bucket name manually.
 
-The policy can be scoped down to only allow listing the buckets in the account, along with limiting
-data retrieval to specific buckets.
+The policy can be scoped down to allow listing all the buckets in the account (necessary to populate
+the dropdown menu in the UI), and to allow limited Read/Write permissions in certain S3 buckets used
+by Studios/Data Explorer.
 
 ```json
 {
@@ -166,17 +167,18 @@ data retrieval to specific buckets.
   "Resource": "*"
 },
 {
-  "Sid": "S3GetBucketData",
+  "Sid": "S3ReadWriteBucketsForStudiosDataExplorer",
   "Effect": "Allow",
   "Action": [
     "s3:Get*",
-    "s3:List*"
+    "s3:List*",
+    "s3:PutObject"
   ],
   "Resource": [
-    "arn:aws:s3:::example-bucket1",
-    "arn:aws:s3:::example-bucket1/*",
-    "arn:aws:s3:::example-bucket2",
-    "arn:aws:s3:::example-bucket2/*"
+    "arn:aws:s3:::example-bucket-read-write-studios",
+    "arn:aws:s3:::example-bucket-read-write-studios/*",
+    "arn:aws:s3:::example-bucket-read-write-data-explorer",
+    "arn:aws:s3:::example-bucket-read-write-data-explorer/*"
   ]
 }
 ```
