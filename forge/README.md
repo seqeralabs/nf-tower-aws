@@ -23,7 +23,8 @@ should review and customize it to meet your organization's security standards.
 
 The `forge-policy.json` file is divided into several statements, each with a clear purpose. You can
 restrict the permissions in each statement using resource-level restrictions, condition keys, and
-resource tagging.
+resource tagging, or by dropping certain actions completely if they are not needed for your use
+case.
 
 Below are examples of how to tighten the permissions for each section of the policy.
 
@@ -98,21 +99,96 @@ Seqera Platform requires the ability to create and manage EC2 launch templates u
 > AWS does not support restricting IAM permissions on EC2 launch templates based on specific
 > resource names or tags. As a result, permission to operate on any resource `*` must be granted.
 
-### AWS Systems Manager (SSM)
+### Pass Role to Batch
 
-Seqera Platform requires access to read from AWS Systems Manager (SSM) to [identify ECS Optimized
-AMI's](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/retrieve-ecs-optimized_AMI.html)
-for pipeline execution.
+The `iam:PassRole` permission allows Seqera to pass IAM roles to AWS Batch. Permissions can be
+restricted to only allow passing the roles created by Seqera Forge with the default prefix
+`TowerForge-*` to the AWS Batch and EC2 services:
 
-### IAM Role Configuration
+```json
+{
+  "Sid": "PassOnlyTowerForgeRolesToBatch",
+  "Effect": "Allow",
+  "Action": "iam:PassRole",
+  "Resource": "arn:aws:iam::<ACCOUNT_ID>:role/TowerForge-*",
+  "Condition": {
+    "StringEquals": {
+      "iam:PassedToService": [
+        "batch.amazonaws.com",
+        "ec2.amazonaws.com"
+      ]
+    }
+  }
+}
+```
 
-Seqera Forge can create and manage the IAM roles needed for your pipelines. If you want to
-restrict this, you can limit the role creation to a specific path or prefix. During Compute
+### Cloudwatch logs access
+
+Seqera Platform requires access to CloudWatch logs to display relevant log data in the web
+interface. The policy can be scoped down to limit access to the [specific log
+group](https://docs.seqera.io/platform-cloud/compute-envs/aws-batch#advanced-options) defined on the
+compute environment:
+
+```json
+{
+  "Sid": "CloudWatchLogsAccess",
+  "Effect": "Allow",
+  "Action": [
+    "logs:Describe*",
+    "logs:FilterLogEvents",
+    "logs:Get*",
+    "logs:List*",
+    "logs:StartQuery",
+    "logs:StopQuery",
+    "logs:TestMetricFilter"
+  ],
+  "Resource": "arn:aws:logs:<REGION>:<ACCOUNT_ID>:log-group:/aws/batch/job/*"
+}
+```
+
+### S3 Access (optional)
+
+Seqera Platform can list S3 buckets for
+[Studios](https://docs.seqera.io/platform-cloud/studios/overview), [Data
+Explorer](https://docs.seqera.io/platform-cloud/data/data-explorer) and to help choose the
+Nextflow working directory, but all these features are optional. S3 access improves the user
+experience by automatically providing a list of S3 buckets to pick from for the Nextflow working
+directory instead of having to type it manually.
+
+The policy can be scoped down to only allow listing the buckets in the account, along with limiting
+data retrieval to specific buckets.
+
+```json
+{
+  "Sid": "S3ListBuckets",
+  "Effect": "Allow",
+  "Action": "s3:ListAllMyBuckets",
+  "Resource": "*"
+},
+{
+  "Sid": "S3GetBucketData",
+  "Effect": "Allow",
+  "Action": [
+    "s3:Get*",
+    "s3:List*"
+  ],
+  "Resource": [
+    "arn:aws:s3:::example-bucket1",
+    "arn:aws:s3:::example-bucket1/*",
+    "arn:aws:s3:::example-bucket2",
+    "arn:aws:s3:::example-bucket2/*"
+  ]
+}
+```
+
+### IAM Role Configuration (optional)
+
+Seqera Forge can create and manage the IAM roles needed for your pipelines. During Compute
 Environment creation, you can optionally define pre-provisioned roles for your Compute Environment,
 Head Job, and Instance profile, eliminating the need for these permissions.
 
-If you want to allow Forge to manage IAM roles but restrict the resources it can create to only
-specific, you can use the following policy:
+If you want to allow Forge to create IAM roles but restrict the resources it can create to specific
+paths and prefixes, the following policy can be used:
 
 ```json
 {
@@ -144,84 +220,13 @@ specific, you can use the following policy:
 > prefix](https://docs.seqera.io/platform-enterprise/enterprise/configuration/overview#compute-environments)
 > for your Seqera resources, replace `TowerForge-*` with your custom prefix.
 
-### Pass Role to Batch
+### AWS Systems Manager (optional)
 
-The `iam:PassRole` permission allows Seqera to pass IAM roles to AWS Batch. Permissions can be
-restricted to only allow passing the roles created by Seqera Forge with the default prefix
-`TowerForge-*` to the AWS Batch and EC2 services:
-
-```json
-{
-  "Sid": "PassOnlyTowerForgeRolesToBatch",
-  "Effect": "Allow",
-  "Action": "iam:PassRole",
-  "Resource": "arn:aws:iam::<ACCOUNT_ID>:role/TowerForge-*",
-  "Condition": {
-    "StringEquals": {
-      "iam:PassedToService": [
-        "batch.amazonaws.com",
-        "ec2.amazonaws.com"
-      ]
-    }
-  }
-}
-```
-
-### S3 Access
-
-Seqera Platform can list S3 buckets for
-[Studios](https://docs.seqera.io/platform-cloud/studios/overview), [Data
-Explorer](https://docs.seqera.io/platform-cloud/data/data-explorer) and to help identify the
-Nextflow working directory.
-
-The policy can be scoped down to only allow listing the buckets in the account, along with limiting
-data retrieval to specific buckets.
-
-```json
-{
-  "Sid": "S3ListBuckets",
-  "Effect": "Allow",
-  "Action": "s3:ListAllMyBuckets",
-  "Resource": "*"
-},
-{
-  "Sid": "S3GetBucketData",
-  "Effect": "Allow",
-  "Action": [
-    "s3:Get*",
-    "s3:List*"
-  ],
-  "Resource": [
-    "arn:aws:s3:::example-bucket1",
-    "arn:aws:s3:::example-bucket1/*",
-    "arn:aws:s3:::example-bucket2",
-    "arn:aws:s3:::example-bucket2/*"
-  ]
-}
-```
-
-### Cloudwatch logs access
-
-Seqera Platform requires access to CloudWatch logs to display relevant log data in the web
-interface. The policy can be scoped down to limit access to the specific log group used by the
-compute environment:
-
-```json
-{
-  "Sid": "CloudWatchLogsAccess",
-  "Effect": "Allow",
-  "Action": [
-    "logs:Describe*",
-    "logs:FilterLogEvents",
-    "logs:Get*",
-    "logs:List*",
-    "logs:StartQuery",
-    "logs:StopQuery",
-    "logs:TestMetricFilter"
-  ],
-  "Resource": "arn:aws:logs:<REGION>:<ACCOUNT_ID>:log-group:/aws/batch/job/*"
-}
-```
+Seqera Platform can interact with AWS Systems Manager (SSM) to [identify ECS Optimized
+AMI's](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/retrieve-ecs-optimized_AMI.html)
+for pipeline execution. This permission is optional, meaning that a [custom AMI
+ID](https://docs.seqera.io/platform-cloud/ compute-envs/aws-batch#advanced-options) can be provided
+during Compute Environment creation, removing the need for this permission.
 
 ### EC2 Describe Permissions (optional)
 

@@ -87,39 +87,6 @@ Platform](https://docs.seqera.io/platform-enterprise/resource-labels/overview)).
 > each Seqera pipeline when configuring it in the Platform UI. Forgetting to set the tag will cause
 > the pipeline to fail to run.
 
-### S3 Access
-
-Seqera Platform can list S3 buckets for
-[Studios](https://docs.seqera.io/platform-cloud/studios/overview), [Data
-Explorer](https://docs.seqera.io/platform-cloud/data/data-explorer) and to help identify the
-Nextflow working directory.
-
-The policy can be scoped down to only allow listing the buckets in the account, along with limiting
-data retrieval to specific buckets.
-
-```json
-{
-  "Sid": "S3ListBuckets",
-  "Effect": "Allow",
-  "Action": "s3:ListAllMyBuckets",
-  "Resource": "*"
-},
-{
-  "Sid": "S3GetBucketData",
-  "Effect": "Allow",
-  "Action": [
-    "s3:Get*",
-    "s3:List*"
-  ],
-  "Resource": [
-    "arn:aws:s3:::example-bucket1",
-    "arn:aws:s3:::example-bucket1/*",
-    "arn:aws:s3:::example-bucket2",
-    "arn:aws:s3:::example-bucket2/*"
-  ]
-}
-```
-
 ### Pass Role to Batch
 
 The `iam:PassRole` permission allows Seqera to pass [execution IAM
@@ -164,6 +131,41 @@ compute environment:
     "logs:FilterLogEvents"
   ],
   "Resource": "arn:aws:logs:<REGION>:<ACCOUNT_ID>:log-group:/aws/batch/job/*"
+}
+```
+
+### S3 Access (optional)
+
+Seqera Platform can list S3 buckets for
+[Studios](https://docs.seqera.io/platform-cloud/studios/overview), [Data
+Explorer](https://docs.seqera.io/platform-cloud/data/data-explorer) and to help choose the
+Nextflow working directory, but all these features are optional. S3 access improves the user
+experience by automatically providing a list of S3 buckets to pick from for the Nextflow working
+directory instead of having to type it manually.
+
+The policy can be scoped down to only allow listing the buckets in the account, along with limiting
+data retrieval to specific buckets.
+
+```json
+{
+  "Sid": "S3ListBuckets",
+  "Effect": "Allow",
+  "Action": "s3:ListAllMyBuckets",
+  "Resource": "*"
+},
+{
+  "Sid": "S3GetBucketData",
+  "Effect": "Allow",
+  "Action": [
+    "s3:Get*",
+    "s3:List*"
+  ],
+  "Resource": [
+    "arn:aws:s3:::example-bucket1",
+    "arn:aws:s3:::example-bucket1/*",
+    "arn:aws:s3:::example-bucket2",
+    "arn:aws:s3:::example-bucket2/*"
+  ]
 }
 ```
 

@@ -43,13 +43,44 @@
       "Resource": "*"
     },
     {
-      "Sid": "FetchECSOptimizedAMIMetadata",
+      "Sid": "PassRolesToBatchCanBeRestricted",
       "Effect": "Allow",
-      "Action": "ssm:GetParameters",
-      "Resource": "arn:aws:ssm:*:*:parameter/aws/service/ecs/*"
+      "Action": "iam:PassRole",
+      "Resource": "*",
+      "Condition": {
+        "StringEquals": {
+          "iam:PassedToService": [
+            "batch.amazonaws.com",
+            "ec2.amazonaws.com"
+          ]
+        }
+      }
     },
     {
-      "Sid": "IAMRoleAndProfileManagementCanBeRestricted",
+      "Sid": "CloudWatchLogsAccessCanBeRestricted",
+      "Effect": "Allow",
+      "Action": [
+        "logs:Describe*",
+        "logs:FilterLogEvents",
+        "logs:Get*",
+        "logs:List*",
+        "logs:StartQuery",
+        "logs:StopQuery",
+        "logs:TestMetricFilter"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "OptionalS3PlatformDataAccessCanBeRestricted",
+      "Effect": "Allow",
+      "Action": [
+        "s3:Get*",
+        "s3:List*"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "OptionalIAMRoleAndProfileManagementCanBeRestricted",
       "Effect": "Allow",
       "Action": [
         "iam:AddRoleToInstanceProfile",
@@ -71,41 +102,10 @@
       "Resource": "*"
     },
     {
-      "Sid": "PassRolesToBatchCanBeRestricted",
+      "Sid": "OptionalFetchECSOptimizedAMIMetadata",
       "Effect": "Allow",
-      "Action": "iam:PassRole",
-      "Resource": "*",
-      "Condition": {
-        "StringEquals": {
-          "iam:PassedToService": [
-            "batch.amazonaws.com",
-            "ec2.amazonaws.com"
-          ]
-        }
-      }
-    },
-    {
-      "Sid": "S3PlatformDataAccessCanBeRestricted",
-      "Effect": "Allow",
-      "Action": [
-        "s3:Get*",
-        "s3:List*"
-      ],
-      "Resource": "*"
-    },
-    {
-      "Sid": "CloudWatchLogsAccessCanBeRestricted",
-      "Effect": "Allow",
-      "Action": [
-        "logs:Describe*",
-        "logs:FilterLogEvents",
-        "logs:Get*",
-        "logs:List*",
-        "logs:StartQuery",
-        "logs:StopQuery",
-        "logs:TestMetricFilter"
-      ],
-      "Resource": "*"
+      "Action": "ssm:GetParameters",
+      "Resource": "arn:aws:ssm:*:*:parameter/aws/service/ecs/*"
     },
     {
       "Sid": "OptionalEC2MetadataDescribe",
