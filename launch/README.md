@@ -200,52 +200,6 @@ pipeline runs. Note that Seqera only creates secrets with the `tower-` prefix.
 
 #### Additional steps required to use secrets in a pipeline
 
-To successfully use pipeline secrets, you must also:
-
-1. Create a [AWS Batch Execution IAM
-   role](https://docs.aws.amazon.com/batch/latest/userguide/execution-IAM-role.html#create-execution-role)
-   with the
-   [`AmazonECSTaskExecutionRolePolicy`](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_execution_IAM_role.html)
-   AWS managed policy attached to it, and an inline policy to allow fetching Secrets Manager
-   secrets:
-
-   ```json
-   {
-     "Effect": "Allow",
-     "Action": "secretsmanager:GetSecretValue",
-     "Resource": "arn:aws:secretsmanager:*:*:secret:tower-*"
-   }
-   ```
-
-1. Specify the Execution IAM role ARN in the **Batch execution role** field in the Seqera compute environment advanced settings.
-
-1. Edit and attach the following policy to the ECS Instance role assigned to the Batch compute
-   environment used by your Seqera pipelines. See [Amazon ECS instance
-   role](https://docs.aws.amazon.com/batch/latest/userguide/instance_IAM_role.html) for more
-   information.
-
-   ```json
-   {
-     "Version": "2012-10-17",
-     "Statement": [
-       {
-         "Effect": "Allow",
-         "Action": "secretsmanager:ListSecrets",
-         "Resource": "*"
-       },
-       {
-         "Effect": "Allow",
-         "Action": "secretsmanager:GetSecretValue",
-         "Resource": "arn:aws:secretsmanager:*:*:secret:tower-*"
-       },
-       {
-         "Effect": "Allow",
-         "Action": [
-           "iam:GetRole",
-           "iam:PassRole"
-         ],
-         "Resource": "arn:aws:iam::<ACCOUNT_ID>:role/<EXECUTION-ROLE-NAME>"
-       }
-     ]
-   }
-   ```
+To successfully use pipeline secrets, the IAM Roles manually created must follow the steps detailed
+in the [Seqera
+documentation](https://docs.seqera.io/platform-cloud/secrets/overview#aws-secrets-manager-integration).
