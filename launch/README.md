@@ -171,11 +171,13 @@ data retrieval to specific buckets.
 
 ### Pipeline Secrets (optional)
 
-[Pipeline Secrets](https://docs.seqera.io/platform-cloud/secrets/overview) require additional
-permissions on the IAM User. The listing of secrets cannot be restricted, but the management actions
-can be restricted to only allow managing secrets in a specific region and account. Note that Seqera
-only creates secrets with the `tower-` prefix. The region must be the same region where the pipeline
-runs.
+Platform can synchronize the [Pipeline
+Secrets](https://docs.seqera.io/platform-cloud/secrets/overview) defined on the Platform workspace
+with AWS Secrets Manager, which requires additional permissions on the IAM User.
+
+The listing of secrets cannot be restricted, but the management actions can be restricted to only
+allow managing secrets in a specific account and region, which must be the same region where the
+pipeline runs. Note that Seqera only creates secrets with the `tower-` prefix.
 
 ```json
 {

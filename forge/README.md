@@ -280,3 +280,32 @@ Allow Forge to manage [AWS EFS file systems](https://aws.amazon.com/efs/), if ne
   "Resource": "*"
 }
 ```
+
+### Pipeline Secrets (optional)
+
+Platform can synchronize the [Pipeline
+Secrets](https://docs.seqera.io/platform-cloud/secrets/overview) defined on the Platform workspace
+with AWS Secrets Manager, which requires additional permissions on the IAM User.
+
+The listing of secrets cannot be restricted, but the management actions can be restricted to only
+allow managing secrets in a specific account and region, which must be the same region where the
+pipeline runs. Note that Seqera only creates secrets with the `tower-` prefix.
+
+```json
+{
+  "Sid": "OptionalPipelineSecretsListing",
+  "Effect": "Allow",
+  "Action": "secretsmanager:ListSecrets",
+  "Resource": "*"
+},
+{
+  "Sid": "OptionalPipelineSecretsManagementCanBeRestricted",
+  "Effect": "Allow",
+  "Action": [
+    "secretsmanager:DescribeSecret",
+    "secretsmanager:DeleteSecret",
+    "secretsmanager:CreateSecret"
+  ],
+  "Resource": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:tower-*"
+}
+```
