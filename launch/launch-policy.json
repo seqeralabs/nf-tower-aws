@@ -2,13 +2,20 @@
   "Version": "2012-10-17",
   "Statement": [
     {
-      "Sid": "SubmitJobsToBatchAndMonitorCanBeRestricted",
+      "Sid": "BatchEnvironmentMonitoringCanBeRestricted",
+      "Effect": "Allow",
+      "Action": [
+        "batch:DescribeComputeEnvironments",
+        "batch:DescribeJobQueues"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "BatchJobsManagementCanBeRestricted",
       "Effect": "Allow",
       "Action": [
         "batch:CancelJob",
-        "batch:DescribeComputeEnvironments",
         "batch:DescribeJobDefinitions",
-        "batch:DescribeJobQueues",
         "batch:DescribeJobs",
         "batch:ListJobs",
         "batch:RegisterJobDefinition",

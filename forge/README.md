@@ -1,12 +1,12 @@
-# Seqera Forge IAM Policy for AWS
+# Seqera Forge IAM Policy for AWS Batch
 
-This directory contains the IAM policy required to use **Seqera Forge** with AWS. Seqera
-Forge automates the creation and management of [AWS Batch](https://aws.amazon.com/batch/) compute
-environments, simplifying your pipeline deployments. Instructions are available in the [Seqera
-documentation](https://docs.seqera.io/platform-cloud/compute-envs/aws-batch#batch-forge) to
-configure a IAM User for Batch Forge.
+This directory contains the IAM policy to allow Seqera Platform to automatically create and manage
+[AWS Batch](https://aws.amazon.com/batch/) resources on behalf of a user, using an automation
+called **Seqera Forge**, simplifying pipeline deployments. Detailed instructions are available in
+the [Seqera documentation](https://docs.seqera.io/platform-cloud/compute-envs/aws-batch#batch-forge)
+explaining how to configure a IAM User for Forge.
 
-**If you are using Seqera Forge, you do not need the policies from the `launch/`
+**If you are using Seqera Forge, you do not need the policies from the [`launch/`](../launch)
 directory.**
 
 ## The `forge-policy.json` File
@@ -28,13 +28,13 @@ case.
 
 Below are examples of how to tighten the permissions for each section of the policy.
 
-### Batch Execution
+### AWS Batch Management
 
 This section of the policy allows Seqera to manage Batch compute environments and jobs. You can
-restrict these permissions to specific resources. e.g. by limiting to Job Queues and Compute
+restrict these permissions to specific resources, e.g. by limiting to Job Queues and Compute
 Environments starting with `TowerForge`, the [default JQ/CE prefix used by
 Forge](https://docs.seqera.io/platform-enterprise/enterprise/configuration/overview#compute-environments).
-You can also restrict permissions based on Resource tag (these need to be [set by users when setting
+You can also restrict permissions based on Resource tag (these need to be set by users when [setting
 up a pipeline in Platform](https://docs.seqera.io/platform-enterprise/resource-labels/overview)).
 
 ```json
@@ -62,7 +62,7 @@ up a pipeline in Platform](https://docs.seqera.io/platform-enterprise/resource-l
   }
 },
 {
-  "Sid": "BatchJobExecution",
+  "Sid": "BatchJobsManagement",
   "Effect": "Allow",
   "Action": [
     "batch:CancelJob",
@@ -93,7 +93,8 @@ up a pipeline in Platform](https://docs.seqera.io/platform-enterprise/resource-l
 
 ### Launch Template Management
 
-Seqera Platform requires the ability to create and manage EC2 launch templates using optimized AMIs identified via AWS Systems Manager (SSM).
+Seqera Platform requires the ability to create and manage EC2 launch templates using optimized AMIs
+identified via AWS Systems Manager (SSM).
 
 > [!NOTE]
 > AWS does not support restricting IAM permissions on EC2 launch templates based on specific
@@ -101,13 +102,14 @@ Seqera Platform requires the ability to create and manage EC2 launch templates u
 
 ### Pass Role to Batch
 
-The `iam:PassRole` permission allows Seqera to pass IAM roles to AWS Batch. Permissions can be
-restricted to only allow passing the roles created by Seqera Forge with the default prefix
-`TowerForge-*` to the AWS Batch and EC2 services:
+TheThe `iam:PassRole` permission allows Seqera to pass [execution IAM
+roles](https://docs.aws.amazon.com/batch/latest/userguide/execution-IAM-role.html#create-execution-role)
+to AWS Batch. Permissions can be restricted to only allow passing the roles created by Seqera Forge
+with the default prefix `TowerForge-*` to the AWS Batch and EC2 services:
 
 ```json
 {
-  "Sid": "PassOnlyTowerForgeRolesToBatch",
+  "Sid": "PassRolesToBatch",
   "Effect": "Allow",
   "Action": "iam:PassRole",
   "Resource": "arn:aws:iam::<ACCOUNT_ID>:role/TowerForge-*",
@@ -122,7 +124,7 @@ restricted to only allow passing the roles created by Seqera Forge with the defa
 }
 ```
 
-### Cloudwatch logs access
+### CloudWatch Logs Access
 
 Seqera Platform requires access to CloudWatch logs to display relevant log data in the web
 interface. The policy can be scoped down to limit access to the [specific log
@@ -314,3 +316,9 @@ pipeline runs. Note that Seqera only creates secrets with the `tower-` prefix.
   "Resource": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:tower-*"
 }
 ```
+
+#### Additional steps required to use secrets in a pipeline
+
+To successfully use pipeline secrets, the IAM Roles manually created must follow the steps detailed
+in the [Seqera
+documentation](https://docs.seqera.io/platform-cloud/secrets/overview#aws-secrets-manager-integration).

@@ -1,9 +1,9 @@
-# Seqera Launch Policy for AWS
+# Seqera Launch IAM Policy for AWS Batch
 
-This directory contains the IAM policy for using Seqera Platform with **manually managed AWS
-Batch resources**. This setup is for users who want to create and manage their own [AWS
-Batch](https://aws.amazon.com/batch/) compute environments and queues.
-Refer to the [Seqera
+This directory contains the IAM policy to allow Seqera Platform to submit pipelines to
+[AWS Batch](https://aws.amazon.com/batch/) using **manually managed Batch resources**. This setup
+is recommended to users who want or need to create and manage their own compute environments and
+queues. Refer to the [Seqera 
 documentation](https://docs.seqera.io/platform-cloud/compute-envs/aws-batch#manual) for detailed
 steps on how to manually configure your Batch environment.
 
@@ -22,15 +22,19 @@ policy, you should review and customize this policy to fit your security require
 
 ## How to Restrict Permissions
 
-The `launch-policy.json` is structured to allow you to easily scope down permissions. Here
-are some examples of how to do so.
+The `launch-policy.json` file is divided into several statements, each with a clear purpose. You can
+restrict the permissions in each statement using resource-level restrictions, condition keys, and
+resource tagging, or by dropping certain actions completely if they are not needed for your use
+case.
 
-### Batch Execution
+Below are examples of how to tighten the permissions for each section of the policy.
+
+### AWS Batch Management
 
 This section of the policy allows Seqera to manage Batch compute environments and jobs. You can
-restrict these permissions to specific resources. e.g. by limiting to Job Queues and Compute
-Environments. You can also restrict permissions based on Resource tag (these need to be [set by
-users when setting up a pipeline in
+restrict these permissions to specific resources, e.g. by limiting access to the Job Queues and
+Compute Environments created manually. You can also restrict permissions based on Resource tag
+(these need to be set by users when [setting up a pipeline in
 Platform](https://docs.seqera.io/platform-enterprise/resource-labels/overview)).
 
 ```json
@@ -38,14 +42,8 @@ Platform](https://docs.seqera.io/platform-enterprise/resource-labels/overview)).
   "Sid": "BatchEnvironmentManagement",
   "Effect": "Allow",
   "Action": [
-    "batch:CreateComputeEnvironment",
-    "batch:CreateJobQueue",
-    "batch:DeleteComputeEnvironment",
-    "batch:DeleteJobQueue",
     "batch:DescribeComputeEnvironments",
-    "batch:DescribeJobQueues",
-    "batch:UpdateComputeEnvironment",
-    "batch:UpdateJobQueue"
+    "batch:DescribeJobQueues"
   ],
   "Resource": [
     "arn:aws:batch:<REGION>:<ACCOUNT_ID>:compute-environment/MyManualCE",
@@ -58,7 +56,7 @@ Platform](https://docs.seqera.io/platform-enterprise/resource-labels/overview)).
   }
 },
 {
-  "Sid": "BatchJobExecution",
+  "Sid": "BatchJobsManagement",
   "Effect": "Allow",
   "Action": [
     "batch:CancelJob",
@@ -114,7 +112,8 @@ AWS Batch and EC2 services:
 ### CloudWatch Logs Access
 
 Seqera Platform requires access to CloudWatch logs to display relevant log data in the web
-interface. The policy can be scoped down to limit access to the specific log group used by the
+interface. The policy can be scoped down to limit access to the [specific log
+group](https://docs.seqera.io/platform-cloud/compute-envs/aws-batch#advanced-options) defined on the
 compute environment:
 
 ```json
@@ -123,12 +122,12 @@ compute environment:
   "Effect": "Allow",
   "Action": [
     "logs:Describe*",
+    "logs:FilterLogEvents",
     "logs:Get*",
     "logs:List*",
     "logs:StartQuery",
     "logs:StopQuery",
-    "logs:TestMetricFilter",
-    "logs:FilterLogEvents"
+    "logs:TestMetricFilter"
   ],
   "Resource": "arn:aws:logs:<REGION>:<ACCOUNT_ID>:log-group:/aws/batch/job/*"
 }

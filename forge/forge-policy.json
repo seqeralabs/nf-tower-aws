@@ -17,7 +17,7 @@
       "Resource": "*"
     },
     {
-      "Sid": "BatchJobExecution",
+      "Sid": "BatchJobsManagementCanBeRestricted",
       "Effect": "Allow",
       "Action": [
         "batch:CancelJob",
@@ -81,7 +81,7 @@
       "Resource": "*"
     },
     {
-      "Sid": "OptionalIAMRoleAndProfileManagementCanBeRestricted",
+      "Sid": "OptionalIAMManagementCanBeRestricted",
       "Effect": "Allow",
       "Action": [
         "iam:AddRoleToInstanceProfile",
@@ -103,7 +103,7 @@
       "Resource": "*"
     },
     {
-      "Sid": "OptionalFetchECSOptimizedAMIMetadata",
+      "Sid": "OptionalFetchOptimizedAMIMetadata",
       "Effect": "Allow",
       "Action": "ssm:GetParameters",
       "Resource": "arn:aws:ssm:*:*:parameter/aws/service/ecs/*"
