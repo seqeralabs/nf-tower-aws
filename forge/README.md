@@ -1,41 +1,25 @@
-# Seqera Forge IAM Policy for AWS Batch
+# Seqera Forge IAM policy for AWS Batch
 
-This directory contains the IAM policy to allow Seqera Platform to automatically create and manage
-[AWS Batch](https://aws.amazon.com/batch/) resources on behalf of a user, using an automation
-called **Seqera Forge**, simplifying pipeline deployments. Detailed instructions are available in
-the [Seqera documentation](https://docs.seqera.io/platform-cloud/compute-envs/aws-batch#batch-forge)
-explaining how to configure a IAM User for Forge.
+This directory contains the IAM policy to allow Seqera to automatically create and manage [AWS Batch](https://aws.amazon.com/batch/) resources on behalf of a user, using an automation called **Seqera Forge**, simplifying pipeline deployments. Detailed instructions are available in the [Seqera documentation](https://docs.seqera.io/platform-cloud/compute-envs/aws-batch#batch-forge).
 
-**If you are using Seqera Forge, you do not need the policies from the [`launch/`](../launch)
-directory.**
+**If you are using Seqera Forge, you do not need the policies from the [`launch/`](../launch) directory.**
 
-## The `forge-policy.json` File
+## The `forge-policy.json` file
 
-The [`forge-policy.json`](./forge-policy.json) file contains the necessary permissions for
-Seqera Forge to operate. This policy is designed to be a general-purpose solution, but you
-should review and customize it to meet your organization's security standards.
+The [`forge-policy.json`](./forge-policy.json) file contains the necessary permissions for Seqera Forge to operate. This policy is designed to be a general-purpose solution, but you should review and customize it to meet your organization's security standards.
 
 > [!WARNING]
-> The default `forge-policy.json` grants broad permissions. We strongly recommend that you
-> scope down these permissions to match your specific needs, as described in this document.
+> The default `forge-policy.json` grants broad permissions. We strongly recommend that you scope down these permissions to match your specific needs, as described in this document.
 
-## How to Restrict Permissions
+## How to restrict permissions
 
-The `forge-policy.json` file is divided into several statements, each with a clear purpose. You can
-restrict the permissions in each statement using resource-level restrictions, condition keys, and
-resource tagging, or by dropping certain actions completely if they are not needed for your use
-case.
+The `forge-policy.json` file is divided into several statements, each with a clear purpose. You can restrict the permissions in each statement using resource-level restrictions, condition keys, and resource tagging, or by dropping certain actions completely if they are not needed for your use case.
 
 Below are examples of how to tighten the permissions for each section of the policy.
 
-### AWS Batch Management
+### AWS Batch management
 
-This section of the policy allows Seqera to manage Batch compute environments and jobs. You can
-restrict these permissions to specific resources, e.g. by limiting to Job Queues and Compute
-Environments starting with `TowerForge`, the [default JQ/CE prefix used by
-Forge](https://docs.seqera.io/platform-enterprise/enterprise/configuration/overview#compute-environments).
-You can also restrict permissions based on Resource tag (these need to be set by users when [setting
-up a pipeline in Platform](https://docs.seqera.io/platform-enterprise/resource-labels/overview)).
+This section of the policy allows Seqera to manage Batch compute environments and jobs. You can restrict these permissions to specific resources, such as limiting to job queues and compute environments starting with `TowerForge`, the [default JQ/CE prefix used by Forge](https://docs.seqera.io/platform-enterprise/enterprise/configuration/overview#compute-environments). You can also restrict permissions based on Resource tag (these need to be set by users when [setting up a pipeline in Platform](https://docs.seqera.io/platform-enterprise/resource-labels/overview)).
 
 ```json
 {
@@ -87,25 +71,18 @@ up a pipeline in Platform](https://docs.seqera.io/platform-enterprise/resource-l
 ```
 
 > [!WARNING]
-> Restricting the `batch` actions using resource tags requires that you set the appropriate tags on
-> each Seqera pipeline when configuring it in the Platform UI. Forgetting to set the tag will cause
-> the pipeline to fail to run.
+> Restricting the `batch` actions using resource tags requires that you set the appropriate tags on each Seqera pipeline when configuring it in Platform. Forgetting to set the tag will cause the pipeline to fail to run.
 
-### Launch Template Management
+### Launch template management
 
-Seqera Platform requires the ability to create and manage EC2 launch templates using optimized AMIs
-identified via AWS Systems Manager (SSM).
+Seqera requires the ability to create and manage EC2 launch templates using optimized AMIs identified via AWS Systems Manager (SSM).
 
 > [!NOTE]
-> AWS does not support restricting IAM permissions on EC2 launch templates based on specific
-> resource names or tags. As a result, permission to operate on any resource `*` must be granted.
+> AWS does not support restricting IAM permissions on EC2 launch templates based on specific resource names or tags. As a result, permission to operate on any resource `*` must be granted.
 
-### Pass Role to Batch
+### Pass role to Batch
 
-TheThe `iam:PassRole` permission allows Seqera to pass [execution IAM
-roles](https://docs.aws.amazon.com/batch/latest/userguide/execution-IAM-role.html#create-execution-role)
-to AWS Batch. Permissions can be restricted to only allow passing the roles created by Seqera Forge
-with the default prefix `TowerForge-*` to the AWS Batch and EC2 services:
+The `iam:PassRole` permission allows Seqera to pass [execution IAM roles](https://docs.aws.amazon.com/batch/latest/userguide/execution-IAM-role.html#create-execution-role) to AWS Batch. Permissions can be restricted to only allow passing the roles created by Seqera Forge with the default prefix `TowerForge-*` to the AWS Batch and EC2 services:
 
 ```json
 {
@@ -124,12 +101,9 @@ with the default prefix `TowerForge-*` to the AWS Batch and EC2 services:
 }
 ```
 
-### CloudWatch Logs Access
+### CloudWatch logs access
 
-Seqera Platform requires access to CloudWatch logs to display relevant log data in the web
-interface. The policy can be scoped down to limit access to the [specific log
-group](https://docs.seqera.io/platform-cloud/compute-envs/aws-batch#advanced-options) defined on the
-compute environment:
+Seqera requires access to CloudWatch logs to display relevant log data in the web interface. The policy can be scoped down to limit access to the [specific log group](https://docs.seqera.io/platform-cloud/compute-envs/aws-batch#advanced-options) defined on the compute environment:
 
 ```json
 {
@@ -148,18 +122,13 @@ compute environment:
 }
 ```
 
-### S3 Access (optional)
+### S3 access (optional)
 
-Seqera Platform offers several products to manipulate data on AWS S3 buckets via its UI, like
-[Studios](https://docs.seqera.io/platform-cloud/studios/overview) and [Data
-Explorer](https://docs.seqera.io/platform-cloud/data/data-explorer). To improve the user experience,
-Platform automatically fetches the list of buckets the user has access to, and
-provides the list in a dropdown menu to be used as Nextflow working directory.
+Seqera offers several products to manipulate data on AWS S3 buckets, such as [Studios](https://docs.seqera.io/platform-cloud/studios/overview) and [Data Explorer](https://docs.seqera.io/platform-cloud/data/data-explorer). To improve the user experience, Seqera automatically fetches the list of buckets the user has access to, and provides the list in a dropdown menu to be used as Nextflow working directory.
+
 The Studios and Data Explorer features are optional, and users can type the bucket name manually.
 
-The policy can be scoped down to allow listing all the buckets in the account (necessary to populate
-the dropdown menu in the UI), and to allow limited Read/Write permissions in certain S3 buckets used
-by Studios/Data Explorer.
+The policy can be scoped down to allow listing all the buckets in the account (necessary to populate the dropdown menu in the UI), and to allow limited Read/Write permissions in certain S3 buckets used by Studios/Data Explorer.
 
 ```json
 {
@@ -185,17 +154,11 @@ by Studios/Data Explorer.
 }
 ```
 
-### IAM Roles Creation (optional)
+### IAM roles creation (optional)
 
-Seqera Forge can optionally create and manage the IAM roles needed for your pipelines: during
-Compute Environment creation, you can optionally define pre-provisioned roles for your Compute
-Environment, Head Job, and Instance profile, eliminating the need for these permissions.
-Refer to the [Seqera
-documentation](https://docs.seqera.io/platform-cloud/enterprise/advanced-topics/manual-aws-batch-setup)
-for more details on how to manually setup IAM roles.
+Seqera Forge can optionally create and manage the IAM roles needed for your pipelines. During compute environment creation, you can optionally define pre-provisioned roles for your compute environment, head job, and instance profile, eliminating the need for these permissions. Refer to the [Seqera documentation](https://docs.seqera.io/platform-cloud/enterprise/advanced-topics/manual-aws-batch-setup) for more details on how to manually set up IAM roles.
 
-If you want to allow Forge to create IAM roles but restrict the resources it can create to specific
-paths and prefixes, an account ID and a role prefix can be set in the `Resource` component:
+If you want to allow Forge to create IAM roles but restrict the resources it can create to specific paths and prefixes, an account ID and a role prefix can be set in the `Resource` component:
 
 ```json
 {
@@ -223,31 +186,20 @@ paths and prefixes, an account ID and a role prefix can be set in the `Resource`
 ```
 
 > [!NOTE]
-> If you have a [custom
-> prefix](https://docs.seqera.io/platform-enterprise/enterprise/configuration/overview#compute-environments)
-> for your Seqera resources, replace `TowerForge-*` with your custom prefix.
+> If you have a [custom prefix](https://docs.seqera.io/platform-enterprise/enterprise/configuration/overview#compute-environments) for your Seqera resources, replace `TowerForge-*` with your custom prefix.
 
 ### AWS Systems Manager (optional)
 
-Seqera Platform can interact with AWS Systems Manager (SSM) to [identify ECS Optimized
-AMI's](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/retrieve-ecs-optimized_AMI.html)
-for pipeline execution. This permission is optional, meaning that a [custom AMI
-ID](https://docs.seqera.io/platform-cloud/ compute-envs/aws-batch#advanced-options) can be provided
-during Compute Environment creation, removing the need for this permission.
+Seqera Platform can interact with AWS Systems Manager (SSM) to [identify ECS Optimized AMIs](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/retrieve-ecs-optimized_AMI.html) for pipeline execution. This permission is optional, meaning that a [custom AMI ID](https://docs.seqera.io/platform-cloud/ compute-envs/aws-batch#advanced-options) can be provided during compute environment creation, removing the need for this permission.
 
-### EC2 Describe Permissions (optional)
+### EC2 describe permissions (optional)
 
-Platform uses EC2 describe permissions to retrieve information about existing AWS resources in your
-account, including VPCs, subnets, and security groups. This data is used to populate dropdown menus
-in the Platform UI when creating new Compute Environments. While these permissions are optional,
-they are recommended to enhance the user experience. Without these permissions, resource IDs would
-need to be manually entered in the interface.
+Seqera uses EC2 describe permissions to retrieve information about existing AWS resources in your account, including VPCs, subnets, and security groups. This data is used to populate dropdown menus in the Platform UI when creating new compute environments. While these permissions are optional, they are recommended to enhance the user experience. Without these permissions, resource IDs would need to be manually entered in the interface.
 
 > [!NOTE]
-> AWS does not support restricting IAM permissions on EC2 Describe actions based on specific
-> resource names or tags. As a result, permission to operate on any resource `*` must be granted.
+> AWS does not support restricting IAM permissions on EC2 Describe actions based on specific resource names or tags. As a result, permission to operate on any resource `*` must be granted.
 
-### FSx File Systems (optional)
+### FSx file systems (optional)
 
 Allow Forge to manage [AWS FSx file systems](https://aws.amazon.com/fsx/), if needed by the pipelines.
 
@@ -265,7 +217,7 @@ Allow Forge to manage [AWS FSx file systems](https://aws.amazon.com/fsx/), if ne
 }
 ```
 
-### EFS File Systems (optional)
+### EFS file systems (optional)
 
 Allow Forge to manage [AWS EFS file systems](https://aws.amazon.com/efs/), if needed by the pipelines.
 
@@ -288,15 +240,11 @@ Allow Forge to manage [AWS EFS file systems](https://aws.amazon.com/efs/), if ne
 }
 ```
 
-### Pipeline Secrets (optional)
+### Pipeline secrets (optional)
 
-Platform can synchronize the [Pipeline
-Secrets](https://docs.seqera.io/platform-cloud/secrets/overview) defined on the Platform workspace
-with AWS Secrets Manager, which requires additional permissions on the IAM User.
+Seqera can synchronize the [pipeline secrets](https://docs.seqera.io/platform-cloud/secrets/overview) defined on the Platform workspace with AWS Secrets Manager, which requires additional permissions on the IAM User.
 
-The listing of secrets cannot be restricted, but the management actions can be restricted to only
-allow managing secrets in a specific account and region, which must be the same region where the
-pipeline runs. Note that Seqera only creates secrets with the `tower-` prefix.
+The listing of secrets cannot be restricted, but the management actions can be restricted to only allow managing secrets in a specific account and region, which must be the same region where the pipeline runs. Note that Seqera only creates secrets with the `tower-` prefix.
 
 ```json
 {
@@ -319,6 +267,4 @@ pipeline runs. Note that Seqera only creates secrets with the `tower-` prefix.
 
 #### Additional steps required to use secrets in a pipeline
 
-To successfully use pipeline secrets, the IAM Roles manually created must follow the steps detailed
-in the [Seqera
-documentation](https://docs.seqera.io/platform-cloud/secrets/overview#aws-secrets-manager-integration).
+To successfully use pipeline secrets, the IAM roles manually created must follow the steps detailed in the [Seqera documentation](https://docs.seqera.io/platform-cloud/secrets/overview#aws-secrets-manager-integration).
