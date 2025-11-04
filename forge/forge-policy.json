@@ -14,7 +14,7 @@
         "batch:UpdateComputeEnvironment",
         "batch:UpdateJobQueue"
       ],
-      "Resource": "*"
+      "Resource": "arn:aws:batch:*:*:compute-environment/TowerForge-*"
     },
     {
       "Sid": "BatchJobsManagementCanBeRestricted",
