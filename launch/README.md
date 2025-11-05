@@ -19,7 +19,7 @@ Below are examples of how to tighten the permissions for each section of the pol
 
 ### AWS Batch management
 
-This section of the policy allows Seqera to manage Batch compute environments and jobs. You can restrict these permissions to specific resources, for example by limiting access to the job queues and compute environments created manually. You can also restrict permissions based on resource tag (these need to be set by users when [setting up a pipeline in Platform](https://docs.seqera.io/platform-enterprise/resource-labels/overview)).
+The first section of the policy allows Seqera to manage Batch compute environments, job queues and jobs. You can restrict these permissions to the specific Batch resources you created manually in your account and region; you can also restrict permissions based on Resource tag, which need to be defined by users when [setting up a pipeline in Platform](https://docs.seqera.io/platform-enterprise/resource-labels/overview).
 
 ```json
 {

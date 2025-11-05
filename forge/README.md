@@ -19,7 +19,8 @@ Below are examples of how to tighten the permissions for each section of the pol
 
 ### AWS Batch management
 
-This section of the policy allows Seqera to manage Batch compute environments and jobs. You can restrict these permissions to specific resources, such as limiting to job queues and compute environments starting with `TowerForge`, the [default JQ/CE prefix used by Forge](https://docs.seqera.io/platform-enterprise/enterprise/configuration/overview#compute-environments). You can also restrict permissions based on Resource tag (these need to be set by users when [setting up a pipeline in Platform](https://docs.seqera.io/platform-enterprise/resource-labels/overview)).
+The first section of the policy allows Seqera to manage Batch compute environments, job queues and jobs. By default Seqera creates job queues and compute environments with the `TowerForge-` prefix, which [can be customized](https://docs.seqera.io/platform-enterprise/enterprise/configuration/overview#compute-environments) if needed.
+You can further restrict these permissions to specific resources in your account ID and region; you can also restrict permissions based on Resource tag, which need to be defined by users when [setting up a pipeline in Platform](https://docs.seqera.io/platform-enterprise/resource-labels/overview).
 
 ```json
 {
