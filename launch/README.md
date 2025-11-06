@@ -1,38 +1,169 @@
-# Launch for AWS Batch
+# Seqera Launch IAM Policy for AWS Batch
 
-Seqera Platform enables the seamless deployment of Nextflow data pipelines with the [AWS Batch](https://aws.amazon.com/batch/) computing service. 
+This directory contains the IAM policy to allow Seqera Platform to submit pipelines to [AWS Batch](https://aws.amazon.com/batch/) using **manually managed Batch resources**. This setup is recommended to users who want or need to create and manage their own compute environments and queues. Refer to the [Seqera documentation](https://docs.seqera.io/platform-cloud/compute-envs/aws-batch#manual) for detailed steps on how to manually configure your Batch environment.
 
-1. Create a AWS user account (or use an existing one) granting at least the following IAM permission: 
+**If you want to use Seqera Forge to automatically manage your AWS resources, you do not need this policy.** See the [`forge/`](../forge) directory for the correct policy.
 
-  - `AmazonS3ReadOnlyAccess` 
-  - `AmazonEC2ContainerRegistryReadOnly`
-  - `CloudWatchLogsReadOnlyAccess` 
-  - The following [custom policy](launch-policy.json) to grant the ability to submit and control Batch jobs.
-  - Grant write access to any S3 bucket used as a pipeline work directory with the following [policy template](s3-bucket-write.json). 
+## The `launch-policy.json` file
 
-1. Create the AWS Batch queue(s) required to deploy the Nextflow execution. 
+The [`launch-policy.json`](./launch-policy.json) file contains the permissions that Seqera needs to launch pipelines using your existing AWS Batch infrastructure. As with the `forge` policy, you should review and customize this policy to fit your security requirements.
 
-Seqera can automate this configuration step and grant the required permissions with [Batch Forge](../forge/README.md).
+> [!WARNING]
+> The default `launch-policy.json` grants broad permissions. We strongly recommend that you scope down these permissions to match your specific needs, as described in this document.
 
-### Seqera role trust policy (optional)
+## How to restrict permissions
 
-You can optionally create a Seqera role trust policy to allow EC2 instances or EKS clusters (depending on your Seqera deployment) to assume the Seqera IAM role.
+The `launch-policy.json` file is divided into several statements, each with a clear purpose. You can restrict the permissions in each statement using resource-level restrictions, condition keys, and resource tagging, or by dropping certain actions completely if they are not needed for your use case.
 
-1. Download the [Seqera role trust policy](../launch/seqera-role-trust-policy.json).
-1. Replace `YOUR-AWS-ACCOUNT` with your AWS account ID. 
-1. Replace `USER-OR-ROLE/USER-OR-ROLE-ID` with the users and or roles that must be able to assume the Seqera IAM role. 
+Below are examples of how to tighten the permissions for each section of the policy.
 
-### Pipeline secrets
+### AWS Batch management
 
-To use pipeline secrets in Seqera Platform, the following extra IAM permissions must be provided: 
- 
-1. Create the AWS Batch [execution IAM role](https://docs.aws.amazon.com/batch/latest/userguide/execution-IAM-role.html#create-execution-role).
+The first section of the policy allows Seqera to manage Batch compute environments, job queues and jobs. You can restrict these permissions to the specific Batch resources you created manually in your account and region; you can also restrict permissions based on Resource tag, which need to be defined by users when [setting up a pipeline in Platform](https://docs.seqera.io/platform-enterprise/resource-labels/overview).
 
-2. Add the `AmazonECSTaskExecutionRolePolicy` policy and the [Secrets policy execution role](secrets-policy-execution-role.json) to the execution IAM role created in step 1.
+```json
+{
+  "Sid": "BatchEnvironmentManagement",
+  "Effect": "Allow",
+  "Action": [
+    "batch:DescribeComputeEnvironments",
+    "batch:DescribeJobQueues"
+  ],
+  "Resource": [
+    "arn:aws:batch:<REGION>:<ACCOUNT_ID>:compute-environment/MyManualCE",
+    "arn:aws:batch:<REGION>:<ACCOUNT_ID>:job-queue/MyManualJQ"
+  ],
+  "Condition": {
+    "StringEqualsIfExists": {
+      "aws:ResourceTag/MyCustomTag": "MyCustomValue"
+    }
+  }
+},
+{
+  "Sid": "BatchJobsManagement",
+  "Effect": "Allow",
+  "Action": [
+    "batch:CancelJob",
+    "batch:DescribeJobDefinitions",
+    "batch:DescribeJobs",
+    "batch:ListJobs",
+    "batch:RegisterJobDefinition",
+    "batch:SubmitJob",
+    "batch:TagResource",
+    "batch:TerminateJob"
+  ],
+  "Resource": [
+    "arn:aws:batch:<REGION>:<ACCOUNT_ID>:job-definition/*",
+    "arn:aws:batch:<REGION>:<ACCOUNT_ID>:job/*"
+  ],
+  "Condition": {
+    "StringEqualsIfExists": {
+      "aws:ResourceTag/MyCustomTag": "MyCustomValue"
+    }
+  }
+}
+```
 
-3. Specify the Execution role ARN in the **Batch execution role** field in the Seqera compute environment advanced settings.
+> [!WARNING]
+> Restricting the `batch` actions using resource tags requires that you set the appropriate tags on each Seqera pipeline when configuring it in the Platform UI. Forgetting to set the tag will cause the pipeline to fail to run.
 
-4. Add the [Secrets policy instance role](secrets-policy-instance-role.json) to the ECS Instance role assigned to the Batch compute environment where your pipelines will be deployed. See [Amazon ECS instance role](https://docs.aws.amazon.com/batch/latest/userguide/instance_IAM_role.html) for more information.
+### Pass role to Batch
 
-5. Add the [Secrets policy](secrets-policy-account.json) to the IAM user or role used by Seqera to access your AWS account (specified in the Seqera credentials).
+The `iam:PassRole` permission allows Seqera to pass [execution IAM roles](https://docs.aws.amazon.com/batch/latest/userguide/execution-IAM-role.html#create-execution-role) to AWS Batch. Permissions can be restricted to only allow passing specific roles you create to the AWS Batch and EC2 services:
 
+```json
+{
+  "Sid": "PassRolesToBatch",
+  "Effect": "Allow",
+  "Action": "iam:PassRole",
+  "Resource": "arn:aws:iam::<ACCOUNT_ID>:role/MyExecutionRole",
+  "Condition": {
+    "StringEquals": {
+      "iam:PassedToService": [
+        "batch.amazonaws.com",
+        "ec2.amazonaws.com"
+      ]
+    }
+  }
+}
+```
+
+### CloudWatch logs access
+
+Seqera Platform requires access to CloudWatch logs to display relevant log data in the web interface. The policy can be scoped down to limit access to the [specific log group](https://docs.seqera.io/platform-cloud/compute-envs/aws-batch#advanced-options) defined on the compute environment:
+
+```json
+{
+  "Sid": "CloudWatchLogsAccess",
+  "Effect": "Allow",
+  "Action": [
+    "logs:Describe*",
+    "logs:FilterLogEvents",
+    "logs:Get*",
+    "logs:List*",
+    "logs:StartQuery",
+    "logs:StopQuery",
+    "logs:TestMetricFilter"
+  ],
+  "Resource": "arn:aws:logs:<REGION>:<ACCOUNT_ID>:log-group:/aws/batch/job/*"
+}
+```
+
+### S3 access (optional)
+
+Seqera offers several products to manipulate data on AWS S3 buckets, such as [Studios](https://docs.seqera.io/platform-cloud/studios/overview) and [Data Explorer](https://docs.seqera.io/platform-cloud/data/data-explorer). To improve the user experience, Seqera automatically fetches the list of buckets the user has access to, and provides the list in a dropdown menu to be used as Nextflow working directory. The Studios and Data Explorer features are optional, and users can type the bucket name manually.
+
+The policy can be scoped down to allow listing all the buckets in the account (necessary to populate the dropdown menu), and to allow limited Read/Write permissions in certain S3 buckets used by Studios/Data Explorer.
+
+```json
+{
+  "Sid": "S3ListBuckets",
+  "Effect": "Allow",
+  "Action": "s3:ListAllMyBuckets",
+  "Resource": "*"
+},
+{
+  "Sid": "S3ReadWriteBucketsForStudiosDataExplorer",
+  "Effect": "Allow",
+  "Action": [
+    "s3:Get*",
+    "s3:List*",
+    "s3:PutObject"
+  ],
+  "Resource": [
+    "arn:aws:s3:::example-bucket-read-write-studios",
+    "arn:aws:s3:::example-bucket-read-write-studios/*",
+    "arn:aws:s3:::example-bucket-read-write-data-explorer",
+    "arn:aws:s3:::example-bucket-read-write-data-explorer/*"
+  ]
+}
+```
+
+### Pipeline secrets (optional)
+
+Seqera can synchronize the [pipeline secrets](https://docs.seqera.io/platform-cloud/secrets/overview) defined on the Platform workspace with AWS Secrets Manager, which requires additional permissions on the IAM User.
+
+The listing of secrets cannot be restricted, but the management actions can be restricted to only allow managing secrets in a specific account and region, which must be the same region where the pipeline runs. Note that Seqera only creates secrets with the `tower-` prefix.
+
+```json
+{
+  "Sid": "OptionalPipelineSecretsListing",
+  "Effect": "Allow",
+  "Action": "secretsmanager:ListSecrets",
+  "Resource": "*"
+},
+{
+  "Sid": "OptionalPipelineSecretsManagementCanBeRestricted",
+  "Effect": "Allow",
+  "Action": [
+    "secretsmanager:DescribeSecret",
+    "secretsmanager:DeleteSecret",
+    "secretsmanager:CreateSecret"
+  ],
+  "Resource": "arn:aws:secretsmanager:<REGION>:<ACCOUNT_ID>:secret:tower-*"
+}
+```
+
+#### Additional steps required to use secrets in a pipeline
+
+To successfully use pipeline secrets, the IAM Roles manually created must follow the steps detailed in the [Seqera documentation](https://docs.seqera.io/platform-cloud/secrets/overview#aws-secrets-manager-integration).
