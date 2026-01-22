@@ -1,0 +1,126 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Parameters:
+  IAMUserName:
+    Description: Enter the name for the IAM user that will be created for the Seqera Platform
+    Type: String
+    Default: SeqeraPlatform
+  RoleName:
+    Description: Enter the name for the IAM role that will be assumed by the Seqera Platform IAM user
+    Type: String
+    Default: SeqeraPlatformRole
+
+Resources:
+  SeqeraPlatformUser:
+    Type: 'AWS::IAM::User'
+    Properties:
+      UserName: !Ref IAMUserName
+  SeqeraPlatformRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS:
+                - !GetAtt SeqeraPlatformUser.Arn
+            Action:
+              - 'sts:AssumeRole'
+      Policies:
+        # Permissions necessary to create resources for the AWS Cloud Compute environment.
+        - PolicyName: SeqeraAWSCloudCreate
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Sid: AWSCloudCreate
+                Action:
+                  - iam:CreateRole
+                  - iam:AddRoleToInstanceProfile
+                  - iam:CreateInstanceProfile
+                  - iam:AttachRolePolicy
+                  - iam:PutRolePolicy
+                  - iam:PassRole
+                  - iam:TagRole
+                  - iam:TagInstanceProfile
+                Resource: '*'
+        # Permissions necessary to validate the AWS Cloud compute environment configuration at creation time.
+        - PolicyName: SeqeraAWSCloudValidate
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Sid: AWSCloudValidate
+                Action:
+                  - ec2:DescribeInstanceTypes
+                  - ec2:DescribeImages
+                  - ec2:DescribeSubnets
+                  - ec2:DescribeSecurityGroups
+                Resource: '*'
+        # Permissions necessary to launch, monitor and stop Nextflow pipelines / Studio sessions on the AWS Cloud compute environment.
+        - PolicyName: AWSCloudLaunch
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Sid: AWSCloudLaunch
+                Action:
+                  - ec2:RunInstances
+                  - ec2:DescribeInstances
+                  - ec2:CreateTags
+                  - ec2:DeleteTags
+                  - ec2:TerminateInstances
+                  - logs:GetLogEvents
+                  - s3:GetObject
+                Resource: '*'
+        # Permissions necessary to delete AWS resources when deleting a Compute Environment.
+        - PolicyName: SeqeraAWSCloudDelete
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Sid: AWSCloudDelete
+                Action:
+                  - iam:GetRole
+                  - iam:ListAttachedRolePolicies
+                  - iam:ListRolePolicies
+                  - iam:DeleteRole
+                  - iam:DeleteInstanceProfile
+                  - iam:RemoveRoleFromInstanceProfile
+                  - iam:DetachRolePolicy
+                  - iam:DeleteRolePolicy
+                Resource: '*'
+        # Permissions to read AWS resource information to show fill in options in the UI.
+        - PolicyName: SeqeraAWSCloudRead
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Sid: AWSCloudRead
+                Action:
+                  - ec2:DescribeInstanceTypes
+                  - ec2:DescribeKeyPairs
+                  - ec2:DescribeVpcs
+                  - ec2:DescribeImages
+                  - ec2:DescribeSubnets
+                  - ec2:DescribeSecurityGroups
+                  - s3:ListAllMyBuckets
+                Resource: '*'
+      RoleName: !Ref RoleName
+  SeqeraPlatformAccessKeys:
+    Type: AWS::IAM::AccessKey
+    Properties:
+      Status: Active
+      UserName: !Ref SeqeraPlatformUser
+
+Outputs:
+  SeqeraPlatoformUserAccessKeyId:
+    Description: The User access key to upload to Seqera Platform as credentials
+    Value: !Ref SeqeraPlatformAccessKeys
+  SeqeraPlatoformUserSecretAccessKey:
+    Description: The User secret access key to upload to Seqera Platform as credentials
+    Value: !GetAtt SeqeraPlatformAccessKeys.SecretAccessKey
+  SeqeraPlatoformRole:
+    Description: The role to be assumed by Seqera Platform to create and use the AWS Cloud credentials
+    Value: !GetAtt SeqeraPlatformRole.Arn
